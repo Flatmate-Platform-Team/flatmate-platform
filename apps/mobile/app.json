@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "Flatmate",
+    "slug": "flatmate-platform",
+    "scheme": "flatmate",
+    "version": "0.1.0",
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}

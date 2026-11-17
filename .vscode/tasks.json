@@ -1,0 +1,38 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Install project dependencies",
+      "type": "shell",
+      "command": "npm install",
+      "problemMatcher": []
+    },
+    {
+      "label": "Start website",
+      "type": "shell",
+      "command": "npm run dev:web",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Start mobile app",
+      "type": "shell",
+      "command": "npm run dev:mobile",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Start API",
+      "type": "shell",
+      "command": "npm run dev:api",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Build website",
+      "type": "shell",
+      "command": "npm run build:web",
+      "problemMatcher": []
+    }
+  ]
+}
