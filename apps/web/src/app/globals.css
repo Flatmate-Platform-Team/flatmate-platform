@@ -1084,3 +1084,54 @@ h1 em {
     transition-duration: 0.01ms !important;
   }
 }
+
+.auth-shell {
+  width: min(100% - 40px, 560px);
+  min-height: 100vh;
+  margin-inline: auto;
+  padding-block: 32px 60px;
+}
+
+.auth-shell > .logo { display: inline-block; margin: 8px 0 36px; }
+.auth-card {
+  padding: clamp(25px, 6vw, 48px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+.auth-card h1 {
+  margin: 18px 0 12px;
+  font-size: clamp(36px, 8vw, 50px);
+  letter-spacing: -2.8px;
+  line-height: 1.1;
+}
+.auth-card .copy { margin-bottom: 28px; color: var(--muted); line-height: 1.7; }
+.auth-form { display: grid; gap: 17px; }
+.auth-form label { display: grid; gap: 8px; color: var(--ink); font-size: 13px; font-weight: 700; }
+.auth-form input,
+.auth-form textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid #dfe4dc;
+  border-radius: 11px;
+  background: #fff;
+  color: var(--ink);
+  font: 500 15px "DM Sans", sans-serif;
+}
+.auth-form textarea { resize: vertical; }
+.auth-form input:focus,
+.auth-form textarea:focus { outline: 3px solid rgb(40 87 67 / 14%); border-color: var(--forest); }
+.auth-form small { color: var(--muted); font-size: 12px; font-weight: 400; }
+.auth-submit { width: 100%; margin-top: 4px; cursor: pointer; }
+.auth-submit:disabled { opacity: .7; cursor: wait; transform: none; }
+.auth-submit span { margin-left: auto; }
+.auth-switch { margin: 22px 0 0; color: var(--muted); font-size: 13px; text-align: center; }
+.auth-switch a { color: var(--forest); font-weight: 700; }
+.form-message { margin: 0; color: #a34335; font-size: 13px; line-height: 1.5; }
+.profile-card .form-message { color: var(--forest); }
+.budget-row { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+.logout-button { display: block; margin: 20px auto 0; padding: 8px; border: 0; background: transparent; color: var(--muted); font: 600 13px "DM Sans", sans-serif; cursor: pointer; }
+.logout-button:hover { color: var(--terracotta); }
+@media (max-width: 420px) { .budget-row { grid-template-columns: 1fr; } }

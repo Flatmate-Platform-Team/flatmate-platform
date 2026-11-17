@@ -1,5 +1,4 @@
 import "reflect-metadata";
-import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 
@@ -13,11 +12,20 @@ async function bootstrap() {
     .map((origin) => origin.trim())
     .filter(Boolean);
 
-  app.enableCors({ origin: allowedOrigins });
-  app.useGlobalPipes(
-    new ValidationPipe({ transform: true, whitelist: true }),
-  );
-
+  const isDevelopment = process.env.NODE_ENV !== "production";
+  app.enableCors({
+    origin: (origin, callback) => {
+      const isLocalDevelopmentOrigin =
+        isDevelopment &&
+        /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\]|10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2})(:\d+)?$/.test(origin ?? "");
+      if (!origin || allowedOrigins.includes(origin) || isLocalDevelopmentOrigin) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error("Origin is not allowed by CORS"), false);
+    },
+    credentials: true,
+  });
   const port = Number(process.env.PORT ?? 4000);
   await app.listen(port);
   console.log(`API running at http://localhost:${port}`);
