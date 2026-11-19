@@ -23,6 +23,7 @@ model User {
   updatedAt   DateTime   @updatedAt
   profile     Profile?
   sessions    Session[]
+  listings    Listing[]
 }
 
 model Session {
@@ -45,4 +46,32 @@ model Profile {
   budgetMax   Int?
   preferences Json?
   user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum ListingStatus {
+  ACTIVE
+  RENTED
+  ARCHIVED
+}
+
+model Listing {
+  id            String        @id @default(cuid())
+  title         String
+  description   String
+  city          String
+  neighborhood  String?
+  monthlyRent   Int
+  deposit       Int?
+  bedrooms      Int           @default(1)
+  furnished     Boolean       @default(false)
+  availableFrom DateTime
+  status        ListingStatus @default(ACTIVE)
+  ownerId       String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  owner         User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([status, city])
+  @@index([monthlyRent])
+  @@index([ownerId])
 }

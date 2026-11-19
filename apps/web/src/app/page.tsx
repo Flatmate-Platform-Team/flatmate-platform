@@ -49,7 +49,7 @@ export default function Home() {
         </a>
 
         <nav className="links" aria-label="Main navigation">
-          <a href="#discover">Discover</a>
+          <a href="/discover">Discover</a>
           <a href="#how">How it works</a>
           <a href="#about">Our approach</a>
         </nav>
@@ -80,7 +80,7 @@ export default function Home() {
             with what matters to you, and take your next move one step at a time.
           </p>
           <div className="hero-actions">
-            <a className="btn" href="/signup">
+            <a className="btn" href="/discover">
               Find your next place <span aria-hidden="true">↗</span>
             </a>
             <a className="text-link" href="#how">
@@ -216,8 +216,8 @@ export default function Home() {
             <h2>Make space for what’s next.</h2>
             <p>Start exploring homes and people who could make a new city feel familiar.</p>
           </div>
-          <a className="btn btn-light" href="/signup">
-            Join the waitlist <span aria-hidden="true">↗</span>
+            <a className="btn btn-light" href="/discover">
+            Explore homes <span aria-hidden="true">↗</span>
           </a>
         </div>
       </section>
