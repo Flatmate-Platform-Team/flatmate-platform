@@ -26,7 +26,7 @@ export default function Login() {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message ?? "Could not sign in.");
-      router.push("/profile");
+      router.replace("/flatmates");
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Could not connect to the server. Make sure the API is running.");
     } finally {

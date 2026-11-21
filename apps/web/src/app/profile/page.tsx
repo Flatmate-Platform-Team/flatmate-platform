@@ -15,6 +15,7 @@ export default function ProfilePage() {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [profileLoaded, setProfileLoaded] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     fetch(`${getApiUrl()}/profiles/me`, { credentials: "include" })
@@ -42,6 +43,7 @@ export default function ProfilePage() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.message ?? "Could not save your profile.");
       setMessage("Your profile is saved.");
+      setSaved(true);
     } catch (reason) {
       setMessage(reason instanceof Error ? reason.message : "Could not connect to the server.");
     } finally { setBusy(false); }
@@ -69,6 +71,7 @@ export default function ProfilePage() {
           {message && <p className="form-message" role="status">{message}</p>}
           <button className="btn auth-submit" disabled={busy}>{busy ? "Saving…" : "Save profile"}<span>→</span></button>
         </form>
+        {saved && <div className="profile-next-step"><strong>Your profile is ready.</strong><p>Start exploring people and homes that could fit your next move.</p><div><a className="btn" href="/flatmates">Meet flatmates <span>↗</span></a><a className="text-link" href="/discover">Browse homes <span>↗</span></a></div></div>}
         <button className="logout-button" onClick={logout}>Sign out</button>
       </section>
     </main>
