@@ -50,6 +50,7 @@ export default function Home() {
 
         <nav className="links" aria-label="Main navigation">
           <a href="/discover">Discover</a>
+          <a href="/flatmates">Flatmates</a>
           <a href="#how">How it works</a>
           <a href="#about">Our approach</a>
         </nav>

@@ -24,6 +24,10 @@ model User {
   profile     Profile?
   sessions    Session[]
   listings    Listing[]
+  likesSent   Like[]        @relation("LikeSender")
+  likesReceived Like[]      @relation("LikeReceiver")
+  matchesAsFirst Match[]    @relation("MatchFirstUser")
+  matchesAsSecond Match[]   @relation("MatchSecondUser")
 }
 
 model Session {
@@ -74,4 +78,28 @@ model Listing {
   @@index([status, city])
   @@index([monthlyRent])
   @@index([ownerId])
+}
+
+model Like {
+  id         String   @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  createdAt  DateTime @default(now())
+  fromUser   User     @relation("LikeSender", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser     User     @relation("LikeReceiver", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@unique([fromUserId, toUserId])
+  @@index([toUserId])
+}
+
+model Match {
+  id         String   @id @default(cuid())
+  firstUserId  String
+  secondUserId String
+  createdAt  DateTime @default(now())
+  firstUser  User     @relation("MatchFirstUser", fields: [firstUserId], references: [id], onDelete: Cascade)
+  secondUser User     @relation("MatchSecondUser", fields: [secondUserId], references: [id], onDelete: Cascade)
+
+  @@unique([firstUserId, secondUserId])
+  @@index([secondUserId])
 }

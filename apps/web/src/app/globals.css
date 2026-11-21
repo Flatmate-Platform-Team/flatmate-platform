@@ -1178,3 +1178,28 @@ h1 em {
 .listing-form-shell { width: min(100% - 40px, 720px); }
 @media (max-width: 900px) { .listing-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .search-panel { grid-template-columns: repeat(2,minmax(0,1fr)); } }
 @media (max-width: 600px) { .discover-page { padding-top: 42px; padding-bottom: 60px; } .discover-heading { align-items: flex-start; flex-direction: column; } .discover-heading h1 { font-size: 43px; letter-spacing: -2.5px; } .search-panel,.listing-grid { grid-template-columns: 1fr; } .results-heading { align-items: flex-start; flex-direction: column; gap: 8px; } }
+.people-search { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 13px; max-width: 680px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--white); }
+.people-search label { display: grid; gap: 7px; color: var(--ink); font-size: 12px; font-weight: 700; }
+.people-search input { min-height: 48px; padding: 12px 14px; border: 1px solid #dfe4dc; border-radius: 10px; font: 500 14px "DM Sans",sans-serif; }
+.people-search .btn { min-height: 48px; cursor: pointer; }
+.people-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 17px; }
+.person-card { position: relative; display: flex; align-items: flex-start; gap: 16px; min-width: 0; padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--white); box-shadow: 0 10px 28px rgb(37 55 44 / 4%); }
+.person-avatar { flex: 0 0 54px; width: 54px; height: 54px; display: grid; place-items: center; border-radius: 50%; background: linear-gradient(145deg,#dce8dc,#f1dfca); color: var(--forest); font: 800 23px "Manrope",sans-serif; }
+.person-main { flex: 1; min-width: 0; }
+.person-city { margin: 0 0 5px; color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.person-main h3 { margin: 0 0 8px; font-size: 19px; }
+.person-bio { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.like-button { flex: 0 0 auto; min-height: 40px; padding: 0 13px; border: 1px solid #e5c7bd; border-radius: 22px; background: #fffaf7; color: #a84f3c; font: 700 12px "DM Sans",sans-serif; cursor: pointer; }
+.like-button:hover:not(:disabled) { background: #f7e8e1; }
+.like-button:disabled { opacity: .75; cursor: default; }
+.like-button.is-liked { border-color: #d5e1d4; background: var(--sage); color: var(--forest); }
+.match-banner { display: flex; align-items: center; gap: 14px; margin: 22px 0; padding: 16px 18px; border: 1px solid #d7e4d5; border-radius: 16px; background: #f1f6ee; }
+.match-banner > span { color: var(--terracotta); font-size: 25px; }
+.match-banner div { flex: 1; }
+.match-banner strong { color: var(--forest-deep); font-size: 14px; }
+.match-banner p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+.match-banner > button { border: 0; background: transparent; color: var(--muted); font-size: 22px; cursor: pointer; }
+.match-avatar { background: linear-gradient(145deg,#f0ddc8,#edd5d0); color: #9a5948; }
+.match-date { display: inline-block; margin-top: 13px; color: var(--forest); font-size: 11px; font-weight: 700; }
+@media (max-width: 760px) { .people-grid { grid-template-columns: 1fr; } }
+@media (max-width: 460px) { .people-search { grid-template-columns: 1fr; } .person-card { flex-wrap: wrap; padding: 18px; } .like-button { margin-left: 70px; } .match-banner { align-items: flex-start; flex-wrap: wrap; } }

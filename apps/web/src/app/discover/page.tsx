@@ -56,7 +56,7 @@ export default function DiscoverPage() {
     <main>
       <header className="shell nav">
         <a className="logo" href="/">avenli<span>.</span></a>
-        <nav className="links" aria-label="Main navigation"><a href="/discover" aria-current="page">Discover homes</a><a href="/profile">My profile</a></nav>
+        <nav className="links" aria-label="Main navigation"><a href="/discover" aria-current="page">Homes</a><a href="/flatmates">Flatmates</a><a href="/matches">Matches</a></nav>
         <div className="nav-actions"><a className="login-link" href="/login">Log in</a><a className="btn btn-small" href="/listings/new">List a room <span>↗</span></a></div>
       </header>
       <section className="shell discover-page">
