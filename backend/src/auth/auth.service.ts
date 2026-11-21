@@ -56,12 +56,13 @@ export class AuthService {
     return { user, token };
   }
 
-  async login(input: Record<string, unknown>) {
+  async login(input: Record<string, unknown>, adminOnly = false) {
     const email = typeof input.email === "string" ? input.email.trim().toLowerCase() : "";
     const password = typeof input.password === "string" ? input.password : "";
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user?.passwordHash || !(await verifyPassword(password, user.passwordHash))) throw new UnauthorizedException("Email or password is incorrect.");
     if (user.status === "SUSPENDED") throw new UnauthorizedException("This account is unavailable.");
+    if (adminOnly && user.role !== "ADMIN") throw new UnauthorizedException("This account does not have administrator access.");
     const token = await this.createSession(user.id);
     return { user: { id: user.id, email: user.email, displayName: user.displayName }, token };
   }

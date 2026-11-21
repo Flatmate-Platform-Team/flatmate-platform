@@ -48,6 +48,7 @@ export default function Login() {
           <button className="btn auth-submit" disabled={busy}>{busy ? "Signing in…" : "Sign in"}<span>→</span></button>
         </form>
         <p className="auth-switch">New to Avenli? <a href="/signup">Create an account</a></p>
+        <p className="auth-switch admin-login-link"><a href="/admin/login">Administrator sign in</a></p>
       </section>
     </main>
   );

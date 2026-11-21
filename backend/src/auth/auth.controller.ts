@@ -28,6 +28,13 @@ export class AuthController {
     return { user: result.user };
   }
 
+  @Post("admin/login")
+  async adminLogin(@Body() body: Record<string, unknown>, @Res({ passthrough: true }) res: Response) {
+    const result = await this.auth.login(body, true);
+    this.setSessionCookie(res, result.token);
+    return { user: result.user };
+  }
+
   @Post("logout")
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     await this.auth.logout(req.headers.cookie);

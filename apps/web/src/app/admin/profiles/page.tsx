@@ -28,7 +28,7 @@ export default function AdminProfilesPage() {
     fetch(`${getApiUrl()}/admin/profiles`, { credentials: "include" })
       .then(async (response) => {
         const result = await response.json();
-        if (response.status === 401) { router.replace("/login"); return; }
+        if (response.status === 401) { router.replace("/admin/login"); return; }
         if (response.status === 403) { setMessage("This page is for administrators only."); return; }
         if (!response.ok) throw new Error(result.message ?? "Could not load profiles.");
         setProfiles(result.profiles);

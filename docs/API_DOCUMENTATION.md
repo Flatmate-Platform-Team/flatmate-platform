@@ -4,6 +4,7 @@ Implemented endpoints:
 
 - `GET /` returns API status.
 - `POST /auth/register`, `POST /auth/login`, `POST /auth/logout`, `GET /auth/me` manage accounts and sessions.
+- `POST /auth/admin/login` only creates a session for an account with the `ADMIN` role.
 - `GET /profiles/me`, `PATCH /profiles/me` read and update the signed-in user's profile.
 - `GET /listings` lists active homes; optional query parameters: `city`, `minRent`, and `maxRent`.
 - `POST /listings` creates a listing for the signed-in user. Public listing results include the host's display name and neighborhood, not an exact street address.
