@@ -10,5 +10,12 @@ Implemented endpoints:
 - `GET /flatmates` returns public profile details for discovery; optional query parameter: `city`.
 - `POST /flatmates/:targetUserId/like` records a like and reports when it creates a mutual match.
 - `GET /matches` returns the signed-in user's mutual matches.
+- `GET /admin/profiles` returns saved member profiles to users with the `ADMIN` role.
 
 Planned: listing management, conversations/messages, reports and blocks. Define validation, authorization and rate limits before each feature is released.
+
+To grant an administrator after applying the role migration, run this SQL as a database administrator and replace the email with the intended account:
+
+```sql
+UPDATE "User" SET "role" = 'ADMIN' WHERE "email" = 'admin@example.com';
+```

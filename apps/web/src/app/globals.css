@@ -1203,3 +1203,12 @@ h1 em {
 .match-date { display: inline-block; margin-top: 13px; color: var(--forest); font-size: 11px; font-weight: 700; }
 @media (max-width: 760px) { .people-grid { grid-template-columns: 1fr; } }
 @media (max-width: 460px) { .people-search { grid-template-columns: 1fr; } .person-card { flex-wrap: wrap; padding: 18px; } .like-button { margin-left: 70px; } .match-banner { align-items: flex-start; flex-wrap: wrap; } }
+.admin-label { color: var(--forest); font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.admin-count { padding: 10px 14px; border-radius: 24px; background: var(--sage); color: var(--forest); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.admin-profile-list { display: grid; gap: 14px; max-width: 900px; }
+.admin-profile-card { padding: 23px; border: 1px solid var(--line); border-radius: 17px; background: var(--white); box-shadow: 0 10px 28px rgb(37 55 44 / 4%); }
+.admin-profile-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.admin-profile-head h2 { margin: 0 0 5px; font-size: 20px; }
+.admin-profile-head > div > p:last-child { margin: 0; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.admin-status { padding: 6px 9px; border-radius: 20px; background: var(--sage); color: var(--forest); font-size: 10px; font-weight: 800; text-transform: capitalize; }
+.admin-bio { margin: 18px 0 12px; color: var(--ink); font-size: 14px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }

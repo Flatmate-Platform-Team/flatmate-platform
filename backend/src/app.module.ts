@@ -6,10 +6,11 @@ import { AuthService } from "./auth/auth.service";
 import { ProfilesController } from "./profiles/profiles.controller";
 import { ListingsController } from "./listings/listings.controller";
 import { DiscoveryController, MatchesController } from "./discovery/discovery.controller";
+import { AdminController } from "./admin/admin.controller";
 
 @Module({
   imports: [PrismaModule],
-  controllers: [AppController, AuthController, ProfilesController, ListingsController, DiscoveryController, MatchesController],
+  controllers: [AppController, AuthController, ProfilesController, ListingsController, DiscoveryController, MatchesController, AdminController],
   providers: [AuthService],
 })
 export class AppModule {}

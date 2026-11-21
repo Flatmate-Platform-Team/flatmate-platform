@@ -78,7 +78,7 @@ export class AuthService {
     if (!token) throw new UnauthorizedException("Please sign in to continue.");
     const session = await this.prisma.session.findUnique({
       where: { tokenHash: hashToken(decodeURIComponent(token)) },
-      include: { user: { select: { id: true, email: true, displayName: true, status: true } } },
+      include: { user: { select: { id: true, email: true, displayName: true, status: true, role: true } } },
     });
     if (!session || session.expiresAt <= new Date() || session.user.status === "SUSPENDED") {
       if (session) await this.prisma.session.delete({ where: { id: session.id } });
