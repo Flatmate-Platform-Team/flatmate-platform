@@ -1242,3 +1242,6 @@ h1 em {
 .admin-profile-head > div > p:last-child { margin: 0; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
 .admin-status { padding: 6px 9px; border-radius: 20px; background: var(--sage); color: var(--forest); font-size: 10px; font-weight: 800; text-transform: capitalize; }
 .admin-bio { margin: 18px 0 12px; color: var(--ink); font-size: 14px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.test-account-badge { color: var(--terracotta); font-size: 10px; font-weight: 800; letter-spacing: .5px; }
+.test-account-remove { margin-top: 16px; padding: 9px 13px; border: 1px solid #e5c7bd; border-radius: 10px; background: #fffaf8; color: #a84f3c; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.test-account-remove:disabled { opacity: .6; cursor: wait; }

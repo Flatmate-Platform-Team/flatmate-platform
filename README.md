@@ -21,7 +21,16 @@ The website opens at http://localhost:3000. The API uses port 4000. The API acce
 ## Build the website
 Run `npm run build:web` from the project root. This creates a production build locally; it does not deploy the app.
 
-## PostgreSQL (later)
-Copy `.env.example` to `backend/.env`, set `DATABASE_URL`, then run `npm run db:generate` and `npm run db:migrate`.
+## Local PostgreSQL setup
+Each developer needs PostgreSQL running locally. Create a private `.env` file in the project root (beside this README and the root `package.json`) and set `DATABASE_URL` to that developer's own local database, for example:
 
-This is a starter scaffold, not a production application. Authentication, real matching, chat, verification, moderation, payments and deployment remain TODOs. `Avenli` is a temporary visual placeholder only; it is not trademark-cleared. No domain is purchased.
+```env
+DATABASE_URL="postgresql://flatmate_user:YOUR_LOCAL_PASSWORD@localhost:5432/flatmate_platform?schema=public"
+```
+
+Do not commit or share `.env`; each developer must use their own database credentials. From the project root, run `npm run db:generate` and `npm run db:migrate` before starting the API.
+
+## Local swipe testing
+After PostgreSQL is set up and migrations have run, execute `npm run seed:test-accounts` from the project root to create 12 fake, clearly marked local test profiles and a sample mutual match. The script only allows the local `flatmate_platform` database and prints a temporary shared password for these fake accounts. Sign in to `/admin/login`, open the saved member profiles page, and use **Remove test account** after testing. That action permanently deletes the selected test account and its related profile, likes, and matches.
+
+This is an early-stage application, not a production service. Mobile discovery, chat, verification, moderation, payments and deployment remain TODOs. `Avenli` is a temporary visual placeholder only; it is not trademark-cleared. No domain is purchased.

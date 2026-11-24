@@ -20,6 +20,7 @@
     "build:api": "npm run build --workspace backend",
     "db:generate": "npm run prisma:generate --workspace backend",
     "db:migrate": "npm run prisma:deploy --workspace backend",
-    "db:migrate:dev": "npm run prisma:migrate --workspace backend"
+    "db:migrate:dev": "npm run prisma:migrate --workspace backend",
+    "seed:test-accounts": "node backend/scripts/seed-test-accounts.cjs"
   }
 }
