@@ -10,10 +10,14 @@ export class DiscoveryController {
 
   @Get()
   async discover(@Req() req: Request, @Query("city") cityQuery?: string) {
-    const currentUser = await this.auth.getUserFromCookie(req.headers.cookie);
+    const currentUser = await this.auth.getUserFromRequest(req.headers.cookie, req.headers.authorization);
     const city = typeof cityQuery === "string" ? cityQuery.trim().slice(0, 80) : "";
+    const passes = await this.prisma.pass.findMany({
+      where: { fromUserId: currentUser.id },
+      select: { toUserId: true },
+    });
     const where: Prisma.UserWhereInput = {
-      id: { not: currentUser.id },
+      id: { notIn: [currentUser.id, ...passes.map((pass) => pass.toUserId)] },
       status: { not: "SUSPENDED" },
       profile: { isNot: null },
     };
@@ -39,7 +43,7 @@ export class DiscoveryController {
 
   @Post(":targetUserId/like")
   async like(@Req() req: Request, @Param("targetUserId") targetUserId: string) {
-    const currentUser = await this.auth.getUserFromCookie(req.headers.cookie);
+    const currentUser = await this.auth.getUserFromRequest(req.headers.cookie, req.headers.authorization);
     if (!targetUserId || targetUserId === currentUser.id) throw new BadRequestException("You can’t like your own profile.");
 
     const target = await this.prisma.user.findFirst({
@@ -69,6 +73,25 @@ export class DiscoveryController {
     });
     return { matched: true, matchId: match.id };
   }
+
+  @Post(":targetUserId/pass")
+  async pass(@Req() req: Request, @Param("targetUserId") targetUserId: string) {
+    const currentUser = await this.auth.getUserFromRequest(req.headers.cookie, req.headers.authorization);
+    if (!targetUserId || targetUserId === currentUser.id) throw new BadRequestException("You can’t pass your own profile.");
+
+    const target = await this.prisma.user.findFirst({
+      where: { id: targetUserId, status: { not: "SUSPENDED" }, profile: { isNot: null } },
+      select: { id: true },
+    });
+    if (!target) throw new BadRequestException("This profile is no longer available.");
+
+    await this.prisma.pass.upsert({
+      where: { fromUserId_toUserId: { fromUserId: currentUser.id, toUserId: target.id } },
+      update: {},
+      create: { fromUserId: currentUser.id, toUserId: target.id },
+    });
+    return { passed: true };
+  }
 }
 
 @Controller("matches")
@@ -77,7 +100,7 @@ export class MatchesController {
 
   @Get()
   async list(@Req() req: Request) {
-    const currentUser = await this.auth.getUserFromCookie(req.headers.cookie);
+    const currentUser = await this.auth.getUserFromRequest(req.headers.cookie, req.headers.authorization);
     const matches = await this.prisma.match.findMany({
       where: { OR: [{ firstUserId: currentUser.id }, { secondUserId: currentUser.id }] },
       orderBy: { createdAt: "desc" },

@@ -23,9 +23,10 @@ The website opens at http://localhost:3000. The API uses port 4000. The API acce
 The Expo app signs in through the same NestJS authentication service as the website. It stores the returned session token in the device Keychain (iOS) or Keystore (Android), and its **Sign out** button revokes that session when the API is reachable.
 
 1. From the project root, install dependencies with `npm install` (the Expo-compatible `expo-secure-store` dependency is included in the mobile workspace).
-2. Configure PostgreSQL as described above, then run `npm run db:generate` and `npm run db:migrate`.
-3. In a terminal, start the API with `npm run dev:api` and leave it running. It listens on port `4000`.
-4. In a second terminal, set the API URL for your own development device, then start Expo:
+2. Configure your own PostgreSQL database as described above, then run `npm run db:generate` and `npm run db:migrate`. The migration adds persistent passes without resetting existing data.
+3. Run `npm run seed:test-accounts` if you need the existing local discovery profiles. Use the test account email and temporary password printed by that command in your own terminal; the seed command only permits the local `flatmate_platform` database.
+4. In a terminal, start the API with `npm run dev:api` and leave it running. It listens on port `4000`.
+5. In a second terminal, set the API URL for your own development device, then start Expo:
 
    **Physical iOS or Android phone:** connect the phone and computer to the same network. Find the computer's current private IPv4 address and substitute it below; do not use the example placeholder literally.
 
@@ -38,7 +39,7 @@ The Expo app signs in through the same NestJS authentication service as the webs
 
    **iOS simulator on macOS:** use `http://localhost:4000` as `EXPO_PUBLIC_API_URL`.
 
-5. Open the app in Expo Go or a development build, then sign in with an account already registered in this project. If a physical phone cannot connect, confirm both devices are on the same network and that the computer firewall allows inbound TCP traffic on port `4000`.
+6. Open the app in Expo Go or a development build, then sign in with an account already registered in this project. Use **Pass** or swipe left to save a pass, or **Like** or swipe right to like a profile. Saved passes stay out of discovery after restarting the app. A mutual like displays a match notice. If a physical phone cannot connect, confirm both devices are on the same network and that the computer firewall allows inbound TCP traffic on port `4000`.
 
 Set `EXPO_PUBLIC_API_URL` in the same terminal session each time you start Expo. It is a local development setting, not a committed project secret; each developer supplies their own reachable API address. Development uses plain HTTP on the local network. Use HTTPS for any deployed API.
 
@@ -57,4 +58,4 @@ Do not commit or share `.env`; each developer must use their own database creden
 ## Local swipe testing
 After PostgreSQL is set up and migrations have run, execute `npm run seed:test-accounts` from the project root to create 12 fake, clearly marked local test profiles and a sample mutual match. The script only allows the local `flatmate_platform` database and prints a temporary shared password for these fake accounts. Sign in to `/admin/login`, open the saved member profiles page, and use **Remove test account** after testing. That action permanently deletes the selected test account and its related profile, likes, and matches.
 
-This is an early-stage application, not a production service. Mobile discovery, chat, verification, moderation, payments and deployment remain TODOs. `Avenli` is a temporary visual placeholder only; it is not trademark-cleared. No domain is purchased.
+This is an early-stage application, not a production service. Chat, verification, moderation, payments and deployment remain TODOs. `Avenli` is a temporary visual placeholder only; it is not trademark-cleared. No domain is purchased.

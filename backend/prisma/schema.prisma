@@ -33,6 +33,8 @@ model User {
   listings    Listing[]
   likesSent   Like[]        @relation("LikeSender")
   likesReceived Like[]      @relation("LikeReceiver")
+  passesSent Pass[]         @relation("PassSender")
+  passesReceived Pass[]     @relation("PassReceiver")
   matchesAsFirst Match[]    @relation("MatchFirstUser")
   matchesAsSecond Match[]   @relation("MatchSecondUser")
 }
@@ -94,6 +96,18 @@ model Like {
   createdAt  DateTime @default(now())
   fromUser   User     @relation("LikeSender", fields: [fromUserId], references: [id], onDelete: Cascade)
   toUser     User     @relation("LikeReceiver", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@unique([fromUserId, toUserId])
+  @@index([toUserId])
+}
+
+model Pass {
+  id         String   @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  createdAt  DateTime @default(now())
+  fromUser   User     @relation("PassSender", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser     User     @relation("PassReceiver", fields: [toUserId], references: [id], onDelete: Cascade)
 
   @@unique([fromUserId, toUserId])
   @@index([toUserId])

@@ -73,6 +73,25 @@ async function request<T>(path: string, init: RequestInit = {}, token?: string):
   return payload as T;
 }
 
+export async function mobileApiRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
+  let token: string | null;
+  try {
+    token = await SecureStore.getItemAsync(SESSION_KEY);
+  } catch {
+    throw new MobileApiError("Could not read the secure sign-in on this device. Please sign in again.");
+  }
+  if (!token) throw new MobileApiError("Please sign in to continue.", 401);
+
+  try {
+    return await request<T>(path, init, token);
+  } catch (error) {
+    if (error instanceof MobileApiError && error.status === 401) {
+      await SecureStore.deleteItemAsync(SESSION_KEY);
+    }
+    throw error;
+  }
+}
+
 export async function signIn(email: string, password: string) {
   const result = await request<AuthResponse>("/auth/mobile/login", {
     method: "POST",
@@ -94,7 +113,7 @@ export async function getSignedInUser() {
   if (!token) return null;
 
   try {
-    const result = await request<UserResponse>("/auth/mobile/me", { method: "GET" }, token);
+    const result = await mobileApiRequest<UserResponse>("/auth/mobile/me", { method: "GET" });
     return result.user;
   } catch (error) {
     if (error instanceof MobileApiError && error.status === 401) {

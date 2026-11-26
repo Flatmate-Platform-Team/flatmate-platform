@@ -87,6 +87,13 @@ export class AuthService {
     return this.getUserFromToken(encodedToken ? decodeURIComponent(encodedToken) : undefined);
   }
 
+  async getUserFromRequest(cookieHeader?: string, authorizationHeader?: string) {
+    if (!authorizationHeader) return this.getUserFromCookie(cookieHeader);
+    const match = /^Bearer\s+(\S+)$/i.exec(authorizationHeader.trim());
+    if (!match) throw new UnauthorizedException("Please sign in to continue.");
+    return this.getUserFromToken(match[1]);
+  }
+
   async getUserFromToken(token?: string) {
     if (!token) throw new UnauthorizedException("Please sign in to continue.");
     const session = await this.prisma.session.findUnique({
