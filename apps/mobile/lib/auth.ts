@@ -68,7 +68,11 @@ async function request<T>(path: string, init: RequestInit = {}, token?: string):
 
   const payload = await response.json().catch(() => null);
   if (!response.ok) {
-    throw new MobileApiError(responseMessage(payload, "The request could not be completed."), response.status);
+    const message = responseMessage(
+      payload,
+      `The Flatmate API returned HTTP ${response.status} for ${path}. Check the API terminal for the matching error.`,
+    );
+    throw new MobileApiError(message, response.status);
   }
   return payload as T;
 }

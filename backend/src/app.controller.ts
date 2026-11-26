@@ -6,8 +6,7 @@ export class AppController {
   status() {
     return {
       name: "Flatmate Platform API",
-      status: "starter",
-      todo: "Feature modules not implemented yet",
+      status: "ok",
     };
   }
 }
