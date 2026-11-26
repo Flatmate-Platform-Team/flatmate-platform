@@ -35,6 +35,14 @@ async function verifyPassword(password: string, stored: string) {
   return actual.length === expected.length && timingSafeEqual(actual, expected);
 }
 
+function cookieToken(cookieHeader?: string) {
+  return cookieHeader
+    ?.split(";")
+    .map((item) => item.trim())
+    .find((item) => item.startsWith("flatmate_session="))
+    ?.slice("flatmate_session=".length);
+}
+
 @Injectable()
 export class AuthService {
   constructor(private readonly prisma: PrismaService) {}
@@ -75,10 +83,14 @@ export class AuthService {
   }
 
   async getUserFromCookie(cookieHeader?: string) {
-    const token = cookieHeader?.split(";").map((item) => item.trim()).find((item) => item.startsWith("flatmate_session="))?.slice("flatmate_session=".length);
+    const encodedToken = cookieToken(cookieHeader);
+    return this.getUserFromToken(encodedToken ? decodeURIComponent(encodedToken) : undefined);
+  }
+
+  async getUserFromToken(token?: string) {
     if (!token) throw new UnauthorizedException("Please sign in to continue.");
     const session = await this.prisma.session.findUnique({
-      where: { tokenHash: hashToken(decodeURIComponent(token)) },
+      where: { tokenHash: hashToken(token) },
       include: { user: { select: { id: true, email: true, displayName: true, status: true, role: true } } },
     });
     if (!session || session.expiresAt <= new Date() || session.user.status === "SUSPENDED") {
@@ -88,8 +100,12 @@ export class AuthService {
     return session.user;
   }
 
+  async logoutToken(token?: string) {
+    if (token) await this.prisma.session.deleteMany({ where: { tokenHash: hashToken(token) } });
+  }
+
   async logout(cookieHeader?: string) {
-    const token = cookieHeader?.split(";").map((item) => item.trim()).find((item) => item.startsWith("flatmate_session="))?.slice("flatmate_session=".length);
-    if (token) await this.prisma.session.deleteMany({ where: { tokenHash: hashToken(decodeURIComponent(token)) } });
+    const encodedToken = cookieToken(cookieHeader);
+    await this.logoutToken(encodedToken ? decodeURIComponent(encodedToken) : undefined);
   }
 }

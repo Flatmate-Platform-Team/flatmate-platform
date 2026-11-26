@@ -18,6 +18,30 @@ India-first Gen Z flatmate and property discovery platform scaffold.
 
 The website opens at http://localhost:3000. The API uses port 4000. The API accepts local web and Expo development origins by default; set `CORS_ORIGIN` to a comma-separated list when your development URLs differ.
 
+## Mobile sign-in (iOS and Android)
+
+The Expo app signs in through the same NestJS authentication service as the website. It stores the returned session token in the device Keychain (iOS) or Keystore (Android), and its **Sign out** button revokes that session when the API is reachable.
+
+1. From the project root, install dependencies with `npm install` (the Expo-compatible `expo-secure-store` dependency is included in the mobile workspace).
+2. Configure PostgreSQL as described above, then run `npm run db:generate` and `npm run db:migrate`.
+3. In a terminal, start the API with `npm run dev:api` and leave it running. It listens on port `4000`.
+4. In a second terminal, set the API URL for your own development device, then start Expo:
+
+   **Physical iOS or Android phone:** connect the phone and computer to the same network. Find the computer's current private IPv4 address and substitute it below; do not use the example placeholder literally.
+
+   ```powershell
+   $env:EXPO_PUBLIC_API_URL = "http://YOUR_COMPUTER_LAN_IP:4000"
+   npm run dev:mobile
+   ```
+
+   **Android emulator:** use `http://10.0.2.2:4000` as `EXPO_PUBLIC_API_URL`.
+
+   **iOS simulator on macOS:** use `http://localhost:4000` as `EXPO_PUBLIC_API_URL`.
+
+5. Open the app in Expo Go or a development build, then sign in with an account already registered in this project. If a physical phone cannot connect, confirm both devices are on the same network and that the computer firewall allows inbound TCP traffic on port `4000`.
+
+Set `EXPO_PUBLIC_API_URL` in the same terminal session each time you start Expo. It is a local development setting, not a committed project secret; each developer supplies their own reachable API address. Development uses plain HTTP on the local network. Use HTTPS for any deployed API.
+
 ## Build the website
 Run `npm run build:web` from the project root. This creates a production build locally; it does not deploy the app.
 
