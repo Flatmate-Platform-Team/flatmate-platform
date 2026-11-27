@@ -140,7 +140,7 @@ export default function Discover() {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator color="#7657e8" size="large" />
+        <ActivityIndicator color="#c6e3ce" size="large" />
         <Text style={styles.muted}>Finding flatmates…</Text>
       </View>
     );
@@ -148,13 +148,15 @@ export default function Discover() {
 
   return (
     <View style={styles.page}>
+      <View pointerEvents="none" style={styles.glowTop} />
+      <View pointerEvents="none" style={styles.glowBottom} />
       <View style={styles.header}>
         <View>
           <Text style={styles.brand}>avenli<Text style={styles.brandDot}>.</Text></Text>
           <Text style={styles.eyebrow}>MEET YOUR FUTURE FLATMATES</Text>
         </View>
         <Pressable accessibilityRole="button" accessibilityLabel="Sign out" disabled={signingOut} onPress={handleSignOut} style={styles.signOutButton}>
-          {signingOut ? <ActivityIndicator color="#7657e8" /> : <Text style={styles.signOutText}>Sign out</Text>}
+          {signingOut ? <ActivityIndicator color="#c6e3ce" /> : <Text style={styles.signOutText}>Sign out</Text>}
         </Pressable>
       </View>
 
@@ -193,10 +195,10 @@ export default function Discover() {
           </Animated.View>
           <View style={styles.actions}>
             <Pressable accessibilityRole="button" accessibilityLabel={`Pass on ${person.displayName}`} accessibilityHint="Removes this profile from your discovery deck" disabled={working} onPress={passCurrent} style={({ pressed }) => [styles.passButton, pressed && !working ? styles.pressed : null, working ? styles.disabled : null]}>
-              {working ? <ActivityIndicator color="#7657e8" /> : <Text style={styles.passText}>Pass</Text>}
+              {working ? <ActivityIndicator color="#c6e3ce" /> : <Text style={styles.passText}>Pass</Text>}
             </Pressable>
             <Pressable accessibilityRole="button" accessibilityLabel={`Like ${person.displayName}`} accessibilityHint="Likes this profile and moves to the next one" disabled={working} onPress={likeCurrent} style={({ pressed }) => [styles.likeButton, pressed && !working ? styles.pressed : null, working ? styles.disabled : null]}>
-              {working ? <ActivityIndicator color="#fff" /> : <Text style={styles.likeText}>Like  ♥</Text>}
+              {working ? <ActivityIndicator color="#14251c" /> : <Text style={styles.likeText}>Like  ♥</Text>}
             </Pressable>
           </View>
           <Text style={styles.remaining}>{people.length} {people.length === 1 ? "profile" : "profiles"} remaining</Text>
@@ -216,41 +218,43 @@ export default function Discover() {
 }
 
 const styles = StyleSheet.create({
-  page: { flex: 1, paddingHorizontal: 24, paddingTop: 58, paddingBottom: 24, backgroundColor: "#fff" },
-  centered: { flex: 1, alignItems: "center", justifyContent: "center", gap: 14, backgroundColor: "#fff" },
-  muted: { color: "#77758a", fontSize: 15 },
+  page: { flex: 1, paddingHorizontal: 24, paddingTop: 58, paddingBottom: 24, backgroundColor: "#080d0b" },
+  glowTop: { position: "absolute", top: -150, right: -120, width: 340, height: 340, borderRadius: 170, backgroundColor: "rgba(75,145,103,0.12)" },
+  glowBottom: { position: "absolute", bottom: 70, left: -190, width: 320, height: 320, borderRadius: 160, backgroundColor: "rgba(177,129,88,0.07)" },
+  centered: { flex: 1, alignItems: "center", justifyContent: "center", gap: 14, backgroundColor: "#080d0b" },
+  muted: { color: "#aab5ad", fontSize: 15 },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  brand: { color: "#222033", fontSize: 27, fontWeight: "900" },
-  brandDot: { color: "#7657e8" },
-  eyebrow: { marginTop: 4, color: "#7657e8", fontSize: 10, fontWeight: "800", letterSpacing: 1.1 },
-  signOutButton: { minHeight: 44, justifyContent: "center", paddingHorizontal: 13, borderRadius: 12, borderWidth: 1, borderColor: "#e4e1eb" },
-  signOutText: { color: "#7657e8", fontSize: 13, fontWeight: "700" },
-  deckCaption: { marginTop: 26, marginBottom: 14, color: "#77758a", fontSize: 14 },
-  profileCard: { flex: 1, minHeight: 330, maxHeight: 520, alignItems: "center", justifyContent: "center", paddingHorizontal: 25, paddingVertical: 25, borderRadius: 25, borderWidth: 1, borderColor: "#eceaf2", backgroundColor: "#fbfaff", elevation: 3, shadowColor: "#222033", shadowOpacity: 0.08, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } },
-  avatar: { width: 76, height: 76, alignItems: "center", justifyContent: "center", borderRadius: 38, backgroundColor: "#eee9ff" },
-  avatarText: { color: "#7657e8", fontSize: 31, fontWeight: "800" },
-  name: { marginTop: 19, color: "#222033", fontSize: 27, fontWeight: "900", textAlign: "center" },
-  location: { marginTop: 6, color: "#77758a", fontSize: 15 },
-  budgetPill: { marginTop: 13, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 18, backgroundColor: "#eee9ff" },
-  budget: { color: "#6246c6", fontSize: 13, fontWeight: "700" },
-  divider: { width: 42, height: 1, marginTop: 19, marginBottom: 16, backgroundColor: "#e2deed" },
-  bio: { color: "#514e61", fontSize: 15, lineHeight: 23, textAlign: "center" },
-  swipeHint: { marginTop: 19, color: "#9290a0", fontSize: 11 },
+  brand: { color: "#f3f2eb", fontSize: 27, fontWeight: "900", letterSpacing: -1 },
+  brandDot: { color: "#a9d9bd" },
+  eyebrow: { marginTop: 4, color: "#c1d9c8", fontSize: 10, fontWeight: "800", letterSpacing: 1.1 },
+  signOutButton: { minHeight: 44, justifyContent: "center", paddingHorizontal: 13, borderRadius: 14, borderWidth: 1, borderColor: "rgba(236,246,239,0.18)", backgroundColor: "rgba(255,255,255,0.055)" },
+  signOutText: { color: "#c6e3ce", fontSize: 13, fontWeight: "700" },
+  deckCaption: { marginTop: 26, marginBottom: 14, color: "#aab5ad", fontSize: 14 },
+  profileCard: { flex: 1, minHeight: 330, maxHeight: 520, alignItems: "center", justifyContent: "center", paddingHorizontal: 25, paddingVertical: 25, borderRadius: 26, borderWidth: 1, borderColor: "rgba(226,245,232,0.2)", backgroundColor: "rgba(233,245,237,0.075)", elevation: 8, shadowColor: "#6fae86", shadowOpacity: 0.16, shadowRadius: 24, shadowOffset: { width: 0, height: 12 } },
+  avatar: { width: 76, height: 76, alignItems: "center", justifyContent: "center", borderRadius: 38, borderWidth: 1, borderColor: "rgba(198,227,206,0.3)", backgroundColor: "rgba(198,227,206,0.14)" },
+  avatarText: { color: "#c6e3ce", fontSize: 31, fontWeight: "800" },
+  name: { marginTop: 19, color: "#f3f2eb", fontSize: 27, fontWeight: "900", textAlign: "center" },
+  location: { marginTop: 6, color: "#b5c1b8", fontSize: 15 },
+  budgetPill: { marginTop: 13, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 18, borderWidth: 1, borderColor: "rgba(198,227,206,0.18)", backgroundColor: "rgba(198,227,206,0.1)" },
+  budget: { color: "#c6e3ce", fontSize: 13, fontWeight: "700" },
+  divider: { width: 42, height: 1, marginTop: 19, marginBottom: 16, backgroundColor: "rgba(234,244,236,0.2)" },
+  bio: { color: "#d1d8d2", fontSize: 15, lineHeight: 23, textAlign: "center" },
+  swipeHint: { marginTop: 19, color: "#91a198", fontSize: 11 },
   actions: { flexDirection: "row", gap: 14, marginTop: 19 },
-  passButton: { flex: 1, minHeight: 58, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "#7657e8", borderRadius: 16, backgroundColor: "#fff" },
-  likeButton: { flex: 1, minHeight: 58, alignItems: "center", justifyContent: "center", borderRadius: 16, backgroundColor: "#7657e8" },
-  passText: { color: "#7657e8", fontSize: 16, fontWeight: "800" },
-  likeText: { color: "#fff", fontSize: 16, fontWeight: "800" },
-  pressed: { opacity: 0.82 },
+  passButton: { flex: 1, minHeight: 58, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "rgba(236,246,239,0.2)", borderRadius: 17, backgroundColor: "rgba(255,255,255,0.055)" },
+  likeButton: { flex: 1, minHeight: 58, alignItems: "center", justifyContent: "center", borderRadius: 17, backgroundColor: "#c6e3ce", shadowColor: "#76bd93", shadowOpacity: 0.2, shadowRadius: 16, shadowOffset: { width: 0, height: 6 }, elevation: 5 },
+  passText: { color: "#e0e8e1", fontSize: 16, fontWeight: "800" },
+  likeText: { color: "#14251c", fontSize: 16, fontWeight: "800" },
+  pressed: { opacity: 0.84, transform: [{ scale: 0.98 }] },
   disabled: { opacity: 0.65 },
-  remaining: { marginTop: 13, color: "#9290a0", fontSize: 12, textAlign: "center" },
-  errorBox: { marginTop: 20, padding: 15, borderRadius: 14, backgroundColor: "#fff3f2" },
-  errorText: { color: "#a53c45", fontSize: 13, lineHeight: 19 },
-  retryButton: { alignSelf: "center", marginTop: 14, paddingHorizontal: 19, paddingVertical: 12, borderRadius: 12, backgroundColor: "#eee9ff" },
-  retryText: { color: "#6246c6", fontSize: 14, fontWeight: "800" },
-  matchNotice: { marginTop: 16, padding: 13, borderRadius: 13, backgroundColor: "#eef7ed", color: "#3f6840", fontSize: 14, fontWeight: "700", lineHeight: 20 },
+  remaining: { marginTop: 13, color: "#91a198", fontSize: 12, textAlign: "center" },
+  errorBox: { marginTop: 20, padding: 15, borderRadius: 16, borderWidth: 1, borderColor: "rgba(255,180,168,0.2)", backgroundColor: "rgba(255,180,168,0.08)" },
+  errorText: { color: "#ffb4a8", fontSize: 13, lineHeight: 19 },
+  retryButton: { alignSelf: "center", marginTop: 14, paddingHorizontal: 19, paddingVertical: 12, borderRadius: 14, borderWidth: 1, borderColor: "rgba(198,227,206,0.2)", backgroundColor: "rgba(198,227,206,0.1)" },
+  retryText: { color: "#c6e3ce", fontSize: 14, fontWeight: "800" },
+  matchNotice: { marginTop: 16, padding: 13, borderRadius: 15, borderWidth: 1, borderColor: "rgba(185,229,198,0.2)", backgroundColor: "rgba(185,229,198,0.09)", color: "#b9e5c6", fontSize: 14, fontWeight: "700", lineHeight: 20 },
   emptyState: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 16 },
-  emptyIcon: { color: "#7657e8", fontSize: 54 },
-  emptyTitle: { marginTop: 13, color: "#222033", fontSize: 22, fontWeight: "900", textAlign: "center" },
-  emptyCopy: { marginTop: 9, color: "#77758a", fontSize: 14, lineHeight: 21, textAlign: "center" },
+  emptyIcon: { color: "#c6e3ce", fontSize: 54 },
+  emptyTitle: { marginTop: 13, color: "#f3f2eb", fontSize: 22, fontWeight: "900", textAlign: "center" },
+  emptyCopy: { marginTop: 9, color: "#aab5ad", fontSize: 14, lineHeight: 21, textAlign: "center" },
 });

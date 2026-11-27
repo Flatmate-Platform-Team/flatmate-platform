@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Animated,
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -25,6 +25,14 @@ export default function SignIn() {
   const [checkingSession, setCheckingSession] = useState(true);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const entrance = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!checkingSession) {
+      entrance.setValue(0);
+      Animated.timing(entrance, { toValue: 1, duration: 520, useNativeDriver: true }).start();
+    }
+  }, [checkingSession, entrance]);
 
   useEffect(() => {
     let active = true;
@@ -74,7 +82,7 @@ export default function SignIn() {
   if (checkingSession) {
     return (
       <View style={styles.loadingPage}>
-        <ActivityIndicator color="#7657e8" />
+        <ActivityIndicator color="#a9d9bd" />
         <Text style={styles.loadingText}>Checking your sign-in…</Text>
       </View>
     );
@@ -85,7 +93,9 @@ export default function SignIn() {
       style={styles.page}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <View pointerEvents="none" style={styles.glowTop} />
+      <View pointerEvents="none" style={styles.glowBottom} />
+      <Animated.ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" style={{ opacity: entrance, transform: [{ translateY: entrance.interpolate({ inputRange: [0, 1], outputRange: [14, 0] }) }] }}>
         <Text style={styles.brand}>avenli<Text style={styles.brandDot}>.</Text></Text>
         <Text style={styles.eyebrow}>YOUR NEXT CHAPTER STARTS HERE</Text>
         <Text style={styles.title}>Welcome{"\n"}back.</Text>
@@ -161,7 +171,7 @@ export default function SignIn() {
             onPress={submit}
             style={({ pressed }) => [styles.button, pressed && !busy ? styles.buttonPressed : null, busy ? styles.buttonBusy : null]}
           >
-            {busy ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>{mode === "sign-in" ? "Sign in" : "Create account"}</Text>}
+            {busy ? <ActivityIndicator color="#14251c" /> : <Text style={styles.buttonText}>{mode === "sign-in" ? "Sign in" : "Create account"}</Text>}
           </Pressable>
         </View>
 
@@ -174,35 +184,37 @@ export default function SignIn() {
           <Text style={styles.switchModeText}>{mode === "sign-in" ? "New here? Create an account" : "Already have an account? Sign in"}</Text>
         </Pressable>
         <Text style={styles.footer}>Your sign-in session is stored securely on this device.</Text>
-      </ScrollView>
+      </Animated.ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: "#fff" },
+  page: { flex: 1, backgroundColor: "#080d0b" },
+  glowTop: { position: "absolute", top: -135, right: -100, width: 300, height: 300, borderRadius: 150, backgroundColor: "rgba(75,145,103,0.13)" },
+  glowBottom: { position: "absolute", bottom: 70, left: -180, width: 300, height: 300, borderRadius: 150, backgroundColor: "rgba(177,129,88,0.08)" },
   content: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 28, paddingTop: 58, paddingBottom: 42 },
-  loadingPage: { flex: 1, alignItems: "center", justifyContent: "center", gap: 12, backgroundColor: "#fff" },
-  loadingText: { color: "#77758a", fontSize: 14 },
-  brand: { marginBottom: 42, color: "#222033", fontSize: 28, fontWeight: "900" },
-  brandDot: { color: "#7657e8" },
-  eyebrow: { color: "#7657e8", fontSize: 11, fontWeight: "800", letterSpacing: 1.5 },
-  title: { marginTop: 14, color: "#222033", fontSize: 47, fontWeight: "900", lineHeight: 52 },
-  description: { marginTop: 12, color: "#77758a", fontSize: 15, lineHeight: 23 },
-  form: { marginTop: 32 },
-  socialSection: { marginTop: 27 },
+  loadingPage: { flex: 1, alignItems: "center", justifyContent: "center", gap: 12, backgroundColor: "#080d0b" },
+  loadingText: { color: "#aab5ad", fontSize: 14 },
+  brand: { marginBottom: 42, color: "#f3f2eb", fontSize: 28, fontWeight: "900", letterSpacing: -1 },
+  brandDot: { color: "#a9d9bd" },
+  eyebrow: { color: "#c1d9c8", fontSize: 11, fontWeight: "800", letterSpacing: 1.5 },
+  title: { marginTop: 14, color: "#f3f2eb", fontSize: 47, fontWeight: "900", lineHeight: 52, letterSpacing: -2 },
+  description: { marginTop: 12, color: "#aab5ad", fontSize: 15, lineHeight: 23 },
+  form: { marginTop: 22, padding: 18, borderWidth: 1, borderColor: "rgba(236,246,239,0.14)", borderRadius: 22, backgroundColor: "rgba(255,255,255,0.045)", shadowColor: "#6fae86", shadowOpacity: 0.1, shadowRadius: 22, shadowOffset: { width: 0, height: 10 }, elevation: 3 },
+  socialSection: { marginTop: 27, padding: 16, borderWidth: 1, borderColor: "rgba(236,246,239,0.12)", borderRadius: 22, backgroundColor: "rgba(255,255,255,0.035)" },
   divider: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 19 },
-  dividerLine: { flex: 1, height: 1, backgroundColor: "#e9e6ef" },
-  dividerText: { color: "#9290a0", fontSize: 11 },
-  label: { marginBottom: 8, color: "#302d40", fontSize: 13, fontWeight: "700" },
-  input: { minHeight: 52, marginBottom: 19, paddingHorizontal: 15, borderWidth: 1, borderColor: "#e4e1eb", borderRadius: 13, color: "#222033", fontSize: 15, backgroundColor: "#fff" },
-  error: { marginBottom: 14, color: "#a53c45", fontSize: 13, lineHeight: 19 },
-  notice: { marginBottom: 14, color: "#3f6840", fontSize: 13, lineHeight: 19 },
-  button: { minHeight: 54, alignItems: "center", justifyContent: "center", borderRadius: 14, backgroundColor: "#7657e8" },
-  buttonPressed: { opacity: 0.86 },
+  dividerLine: { flex: 1, height: 1, backgroundColor: "rgba(234,244,236,0.15)" },
+  dividerText: { color: "#aab5ad", fontSize: 11 },
+  label: { marginBottom: 8, color: "#e6ebe6", fontSize: 13, fontWeight: "700" },
+  input: { minHeight: 52, marginBottom: 19, paddingHorizontal: 15, borderWidth: 1, borderColor: "rgba(236,246,239,0.16)", borderRadius: 15, color: "#f3f2eb", fontSize: 15, backgroundColor: "rgba(255,255,255,0.055)" },
+  error: { marginBottom: 14, color: "#ffb4a8", fontSize: 13, lineHeight: 19 },
+  notice: { marginBottom: 14, color: "#b9e5c6", fontSize: 13, lineHeight: 19 },
+  button: { minHeight: 54, alignItems: "center", justifyContent: "center", borderRadius: 16, backgroundColor: "#c6e3ce", shadowColor: "#76bd93", shadowOpacity: 0.22, shadowRadius: 20, shadowOffset: { width: 0, height: 8 }, elevation: 6 },
+  buttonPressed: { opacity: 0.86, transform: [{ scale: 0.985 }] },
   buttonBusy: { opacity: 0.7 },
-  buttonText: { color: "#fff", fontSize: 15, fontWeight: "800" },
-  footer: { marginTop: 24, color: "#8e8b9d", fontSize: 12, textAlign: "center" },
+  buttonText: { color: "#14251c", fontSize: 15, fontWeight: "800" },
+  footer: { marginTop: 24, color: "#87958c", fontSize: 12, textAlign: "center" },
   switchMode: { alignSelf: "center", marginTop: 18, paddingVertical: 8 },
-  switchModeText: { color: "#6246c6", fontSize: 13, fontWeight: "700" },
+  switchModeText: { color: "#b8dfc3", fontSize: 13, fontWeight: "700" },
 });

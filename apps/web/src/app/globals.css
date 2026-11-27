@@ -1254,3 +1254,129 @@ h1 em {
 .test-account-badge { color: var(--terracotta); font-size: 10px; font-weight: 800; letter-spacing: .5px; }
 .test-account-remove { margin-top: 16px; padding: 9px 13px; border: 1px solid #e5c7bd; border-radius: 10px; background: #fffaf8; color: #a84f3c; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
 .test-account-remove:disabled { opacity: .6; cursor: wait; }
+
+/* Avenli dark glass system: one shared surface language across every route. */
+:root {
+  color-scheme: dark;
+  --ink: #f3f2eb;
+  --muted: #aab5ad;
+  --forest: #a9d9bd;
+  --forest-deep: #07110d;
+  --sage: rgba(162, 216, 184, .13);
+  --sage-dark: rgba(162, 216, 184, .2);
+  --paper: #080d0b;
+  --white: rgba(255, 255, 255, .075);
+  --terracotta: #f2a183;
+  --gold: #e8c18b;
+  --line: rgba(234, 244, 236, .14);
+  --shadow: 0 24px 80px rgba(0, 0, 0, .36);
+}
+
+html { background: var(--paper); }
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 14% 4%, rgba(46, 116, 82, .22), transparent 35rem),
+    radial-gradient(ellipse at 92% 24%, rgba(124, 89, 61, .12), transparent 32rem),
+    linear-gradient(155deg, #0b120f 0%, #080d0b 58%, #101714 100%);
+  background-attachment: fixed;
+  color: var(--ink);
+}
+
+body::before {
+  position: fixed;
+  z-index: -1;
+  inset: -20%;
+  background: radial-gradient(ellipse at 22% 18%, rgba(95, 179, 133, .11), transparent 31%), radial-gradient(ellipse at 78% 60%, rgba(203, 135, 98, .08), transparent 29%);
+  content: "";
+  pointer-events: none;
+  animation: ambient-drift 24s ease-in-out infinite alternate;
+}
+
+@keyframes ambient-drift { from { transform: translate3d(-1%, -1%, 0) scale(1); } to { transform: translate3d(1.5%, 1%, 0) scale(1.04); } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+.nav, .footer { border-color: var(--line); }
+.logo, .login-link, .links { color: var(--ink); }
+.links a:hover, .login-link:hover, .text-link:hover { color: var(--gold); }
+.eyebrow { color: #c3d9c9; }
+.hero-description, .section-heading > p, .benefit-card p, .footer p, .footer > span { color: var(--muted); }
+
+.btn {
+  border-color: rgba(195, 225, 205, .45);
+  background: linear-gradient(135deg, #d9eadc, #a6d4b6);
+  box-shadow: 0 10px 34px rgba(108, 179, 133, .18), inset 0 1px rgba(255, 255, 255, .75);
+  color: #14251c;
+}
+.btn:hover { border-color: #ecf5e9; background: #ecf5e9; box-shadow: 0 14px 38px rgba(108, 179, 133, .26); }
+.btn-light { background: rgba(255, 255, 255, .9); color: #14251c; }
+
+.hero-showcase, .home-card, .person-card, .admin-profile-card, .auth-card,
+.search-panel, .people-search, .listing-card, .benefit-card, .closing-card,
+.match-banner, .listing-state, .swipe-card, .auth-form, .form-panel,
+.profile-panel, .listing-form, .admin-count, .admin-status {
+  border: 1px solid rgba(236, 246, 239, .16);
+  background: linear-gradient(145deg, rgba(255, 255, 255, .105), rgba(255, 255, 255, .045));
+  box-shadow: 0 20px 65px rgba(0, 0, 0, .24), inset 0 1px rgba(255, 255, 255, .11);
+  backdrop-filter: blur(22px) saturate(135%);
+  -webkit-backdrop-filter: blur(22px) saturate(135%);
+}
+.hero-showcase { background: radial-gradient(ellipse at 65% 4%, rgba(194, 166, 115, .3), transparent 40%), linear-gradient(150deg, #18352a 0%, #0c1913 72%, #15251c 100%); }
+.home-illustration { background: radial-gradient(circle at 75% 12%, rgba(235, 196, 139, .54), transparent 19%), linear-gradient(155deg, #18372b 0%, #244b39 55%, #0d1d15 100%); }
+.illustration-window { border-color: rgba(236, 244, 230, .64); background: rgba(229, 237, 222, .55); backdrop-filter: blur(8px); }
+.illustration-window span, .illustration-window span:nth-child(2), .illustration-window span:nth-child(3) { background: linear-gradient(145deg, rgba(188, 220, 194, .72), rgba(219, 188, 143, .66)); }
+.listing-card { background: rgba(11, 19, 15, .78); }
+.listing-card h2, .listing-price strong, .benefit-card h3, .section-heading h2, .steps-heading h2 { color: var(--ink); }
+.benefit-card { transition: transform 260ms cubic-bezier(.2,.8,.2,1), border-color 260ms ease, background 260ms ease, box-shadow 260ms ease; }
+.benefit-card:hover, .person-card:hover, .admin-profile-card:hover, .home-card:hover { transform: translateY(-5px); border-color: rgba(186, 226, 198, .35); box-shadow: 0 28px 70px rgba(0, 0, 0, .34), inset 0 1px rgba(255, 255, 255, .14); }
+.benefit-symbol, .note-icon, .listing-arrow, .person-avatar, .swipe-avatar { background: rgba(174, 222, 189, .16); color: #c1e4ca; }
+.steps-section { background: linear-gradient(135deg, rgba(18, 48, 35, .88), rgba(7, 16, 12, .95)); }
+.closing-card { background: linear-gradient(115deg, rgba(32, 82, 57, .82), rgba(15, 35, 26, .86)); }
+.closing-card h2, .closing-card .eyebrow-light { color: var(--ink); }
+.closing-card p, .step-card p, .steps-footer { color: #c0cdc3; }
+.btn-light { color: #14251c; }
+
+input, textarea, select {
+  border: 1px solid rgba(232, 243, 235, .16) !important;
+  background: rgba(255, 255, 255, .055) !important;
+  color: var(--ink) !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .045);
+}
+input::placeholder, textarea::placeholder { color: #839188; }
+input:focus, textarea:focus, select:focus { outline: 2px solid rgba(169, 217, 189, .52); outline-offset: 2px; }
+label, .auth-switch, .form-label, .results-heading, .home-meta, .person-main h3 { color: var(--ink); }
+.auth-shell { background: transparent; }
+.auth-card { border-radius: 28px; }
+.social-auth-button, .oauth-button, .like-button, .test-account-remove {
+  border: 1px solid rgba(236, 246, 239, .17);
+  background: rgba(255, 255, 255, .065);
+  color: var(--ink);
+  backdrop-filter: blur(16px);
+}
+.match-banner { color: var(--ink); }
+.match-banner strong, .match-banner > span, .match-date, .admin-label, .admin-status, .admin-count { color: #b9dfc3; }
+.match-banner p, .home-owner, .person-main .person-city { color: var(--muted); }
+.listing-state { color: var(--ink); }
+.listing-state p, .listing-state h3, .empty-icon { color: var(--ink); }
+.listing-error, .form-message, .listing-error p { color: #ffb4a8; }
+.swipe-card { background: rgba(15, 25, 20, .77); }
+.swipe-card-visual { background: radial-gradient(circle at 68% 15%, rgba(228, 193, 138, .65), transparent 24%), linear-gradient(155deg, #375945, #15261d 70%, #0b130f); }
+.swipe-card-info { color: var(--ink); }
+.swipe-card-info p, .swipe-person-heading span { color: var(--muted); }
+.swipe-controls button { border-color: rgba(235, 245, 238, .22) !important; background: rgba(255,255,255,.09); backdrop-filter: blur(16px); }
+.swipe-controls .swipe-pass { color: #ffb49b; }
+.swipe-controls .swipe-like { color: #b9e5c6; }
+.listing-grid > *, .people-grid > *, .admin-profile-list > *, .benefit-grid > * { animation: rise-in 560ms both; }
+.listing-grid > *:nth-child(2), .people-grid > *:nth-child(2), .benefit-grid > *:nth-child(2) { animation-delay: 80ms; }
+.listing-grid > *:nth-child(3), .people-grid > *:nth-child(3), .benefit-grid > *:nth-child(3) { animation-delay: 150ms; }
+.hero-copy, .hero-showcase, .auth-card, .discover-heading, .swipe-layout { animation: rise-in 650ms cubic-bezier(.2,.8,.2,1) both; }
+a, button, input, textarea, select { transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 220ms ease, transform 220ms ease; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+@media (max-width: 760px) {
+  .nav { background: rgba(8, 13, 11, .68); backdrop-filter: blur(20px); }
+  .auth-card, .search-panel, .people-search { border-radius: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
