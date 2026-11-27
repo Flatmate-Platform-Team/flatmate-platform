@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ProductNav } from "../../components/product-nav";
 
 function getApiUrl() {
   return process.env.NEXT_PUBLIC_API_URL ?? `${window.location.protocol}//${window.location.hostname}:4000`;
@@ -87,11 +88,7 @@ export default function FlatmatesPage() {
 
   return (
     <main>
-      <header className="shell nav">
-        <a className="logo" href="/">avenli<span>.</span></a>
-        <nav className="links" aria-label="Main navigation"><a href="/discover">Homes</a><a href="/flatmates" aria-current="page">Flatmates</a><a href="/matches">Matches</a></nav>
-        <div className="nav-actions"><a className="login-link" href="/profile">My profile</a></div>
-      </header>
+      <ProductNav active="Discover" />
       <section className="shell discover-page">
         <div className="eyebrow"><span className="eyebrow-dot" /> GOOD HOMES START WITH GOOD PEOPLE</div>
         <div className="discover-heading"><div><h1>Meet your future flatmates.</h1><p>Explore people by city, read a little about their routine, and connect when it feels right.</p></div><a className="text-link" href="/matches">See your matches <span>↗</span></a></div>

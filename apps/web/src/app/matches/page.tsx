@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ProductNav } from "../../components/product-nav";
 
 function getApiUrl() {
   return process.env.NEXT_PUBLIC_API_URL ?? `${window.location.protocol}//${window.location.hostname}:4000`;
@@ -30,7 +31,7 @@ export default function MatchesPage() {
 
   return (
     <main>
-      <header className="shell nav"><a className="logo" href="/">avenli<span>.</span></a><nav className="links" aria-label="Main navigation"><a href="/discover">Homes</a><a href="/flatmates">Flatmates</a><a href="/matches" aria-current="page">Matches</a></nav><div className="nav-actions"><a className="login-link" href="/profile">My profile</a></div></header>
+      <ProductNav active="Messages" />
       <section className="shell discover-page">
         <div className="eyebrow"><span className="eyebrow-dot" /> A CONNECTION GOES BOTH WAYS</div>
         <div className="discover-heading"><div><h1>Your mutual matches.</h1><p>When you both like each other, you’ll find the connection here.</p></div><a className="btn" href="/flatmates">Discover flatmates <span>↗</span></a></div>

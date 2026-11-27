@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ProductNav } from "../../components/product-nav";
 
 function getApiUrl() {
   return process.env.NEXT_PUBLIC_API_URL ?? `${window.location.protocol}//${window.location.hostname}:4000`;
@@ -55,8 +56,8 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="auth-shell">
-      <a className="logo" href="/">avenli<span>.</span></a>
+    <main className="product-page">
+      <ProductNav active="Profile" name={name} />
       <section className="auth-card profile-card">
         <p className="eyebrow"><span className="eyebrow-dot" /> YOUR SPACE</p>
         <h1>Make it yours{name ? `, ${name.split(" ")[0]}` : ""}.</h1>

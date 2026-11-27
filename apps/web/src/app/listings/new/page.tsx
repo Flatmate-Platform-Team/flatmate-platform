@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ProductNav } from "../../../components/product-nav";
 
 function getApiUrl() {
   return process.env.NEXT_PUBLIC_API_URL ?? `${window.location.protocol}//${window.location.hostname}:4000`;
@@ -33,9 +34,9 @@ export default function NewListingPage() {
   }
 
   return (
-    <main className="auth-shell listing-form-shell">
-      <a className="logo" href="/">avenli<span>.</span></a>
-      <section className="auth-card">
+    <main className="product-page">
+      <ProductNav active="Explore" />
+      <section className="auth-card listing-form-card">
         <p className="eyebrow"><span className="eyebrow-dot" /> SHARE A SPACE</p>
         <h1>List a room.</h1>
         <p className="copy">Add the details that help someone picture a good day at home. Keep exact street addresses private.</p>

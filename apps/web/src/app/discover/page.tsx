@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { ProductNav } from "../../components/product-nav";
 
 function getApiUrl() {
   return process.env.NEXT_PUBLIC_API_URL ?? `${window.location.protocol}//${window.location.hostname}:4000`;
@@ -54,11 +55,7 @@ export default function DiscoverPage() {
 
   return (
     <main>
-      <header className="shell nav">
-        <a className="logo" href="/">avenli<span>.</span></a>
-        <nav className="links" aria-label="Main navigation"><a href="/discover" aria-current="page">Homes</a><a href="/flatmates">Flatmates</a><a href="/matches">Matches</a></nav>
-        <div className="nav-actions"><a className="login-link" href="/login">Log in</a><a className="btn btn-small" href="/listings/new">List a room <span>↗</span></a></div>
-      </header>
+      <ProductNav active="Explore" />
       <section className="shell discover-page">
         <div className="eyebrow"><span className="eyebrow-dot" /> FIND A PLACE THAT FEELS RIGHT</div>
         <div className="discover-heading"><div><h1>Find your kind of home.</h1><p>Browse shared homes and rooms posted by the community.</p></div><a className="btn" href="/listings/new">List a room <span>↗</span></a></div>
