@@ -12,6 +12,12 @@ if (!process.env.DATABASE_URL && existsSync(backendEnvFile)) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const proxyHopsSetting = process.env.TRUST_PROXY_HOPS ?? "0";
+  if (!/^[0-5]$/.test(proxyHopsSetting)) {
+    throw new Error("TRUST_PROXY_HOPS must be an integer from 0 to 5.");
+  }
+  // Express ignores forwarded IP headers unless an explicitly configured proxy hop count is trusted.
+  app.getHttpAdapter().getInstance().set("trust proxy", Number(proxyHopsSetting));
   const allowedOrigins = (
     process.env.CORS_ORIGIN ??
     "http://localhost:3000,http://localhost:8081,http://localhost:19006"

@@ -13,6 +13,8 @@ type AuthResponse = {
   token: string;
 };
 
+type RegisterResponse = { message: string };
+
 type UserResponse = {
   user: MobileUser;
 };
@@ -100,6 +102,36 @@ export async function signIn(email: string, password: string) {
   const result = await request<AuthResponse>("/auth/mobile/login", {
     method: "POST",
     body: JSON.stringify({ email: email.trim(), password }),
+  });
+
+  try {
+    await SecureStore.setItemAsync(SESSION_KEY, result.token);
+  } catch {
+    await request("/auth/mobile/logout", { method: "POST" }, result.token).catch(() => undefined);
+    throw new MobileApiError("Sign-in succeeded, but the device could not save the session securely. Please try again.");
+  }
+
+  return result.user;
+}
+
+export async function registerMobile(displayName: string, email: string, password: string) {
+  return request<RegisterResponse>("/auth/mobile/register", {
+    method: "POST",
+    body: JSON.stringify({ displayName: displayName.trim(), email: email.trim(), password }),
+  });
+}
+
+export function mobileOAuthStartUrl(provider: "google" | "facebook" | "apple", handoffChallenge: string) {
+  const query = new URLSearchParams({ platform: "mobile", handoff_challenge: handoffChallenge });
+  return `${apiBaseUrl()}/auth/oauth/${provider}/start?${query.toString()}`;
+}
+
+export const mobileOAuthRedirectUrl = "flatmate://auth/callback";
+
+export async function completeMobileOAuth(handoff: string, verifier: string) {
+  const result = await request<AuthResponse>("/auth/oauth/mobile/complete", {
+    method: "POST",
+    body: JSON.stringify({ handoff, verifier }),
   });
 
   try {

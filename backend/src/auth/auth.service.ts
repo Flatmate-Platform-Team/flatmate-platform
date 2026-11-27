@@ -1,10 +1,10 @@
 import {
   Injectable,
   UnauthorizedException,
-  ConflictException,
   BadRequestException,
 } from "@nestjs/common";
 import { createHash, randomBytes, scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
+import { Prisma } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 
 const SESSION_DAYS = 14;
@@ -24,6 +24,8 @@ async function hashPassword(password: string) {
   const derived = await deriveKey(password, salt, 64, { N: 32768, r: 8, p: 1 });
   return `scrypt$32768$8$1$${salt.toString("hex")}$${derived.toString("hex")}`;
 }
+
+const DUMMY_PASSWORD_HASH = hashPassword("flatmate-nonexistent-account-password");
 
 async function verifyPassword(password: string, stored: string) {
   const [algorithm, n, r, p, saltHex, keyHex] = stored.split("$");
@@ -54,25 +56,82 @@ export class AuthService {
     if (displayName.length < 2 || displayName.length > 80) throw new BadRequestException("Enter a name between 2 and 80 characters.");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) throw new BadRequestException("Enter a valid email address.");
     if (password.length < 12 || password.length > 128) throw new BadRequestException("Password must be 12 to 128 characters.");
-    if (await this.prisma.user.findUnique({ where: { email }, select: { id: true } })) throw new ConflictException("An account with this email already exists.");
+    const passwordHash = await hashPassword(password);
+    if (await this.prisma.user.findUnique({ where: { email }, select: { id: true } })) return;
 
-    const user = await this.prisma.user.create({
-      data: { email, displayName, passwordHash: await hashPassword(password), profile: { create: {} } },
-      select: { id: true, email: true, displayName: true },
-    });
-    const token = await this.createSession(user.id);
-    return { user, token };
+    try {
+      await this.prisma.user.create({
+        data: { email, displayName, passwordHash, profile: { create: {} } },
+        select: { id: true },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") return;
+      throw error;
+    }
   }
 
   async login(input: Record<string, unknown>, adminOnly = false) {
     const email = typeof input.email === "string" ? input.email.trim().toLowerCase() : "";
     const password = typeof input.password === "string" ? input.password : "";
     const user = await this.prisma.user.findUnique({ where: { email } });
-    if (!user?.passwordHash || !(await verifyPassword(password, user.passwordHash))) throw new UnauthorizedException("Email or password is incorrect.");
-    if (user.status === "SUSPENDED") throw new UnauthorizedException("This account is unavailable.");
-    if (adminOnly && user.role !== "ADMIN") throw new UnauthorizedException("This account does not have administrator access.");
+    const passwordHash = user?.passwordHash ?? await DUMMY_PASSWORD_HASH;
+    const passwordIsValid = await verifyPassword(password, passwordHash);
+    if (!user?.passwordHash || !passwordIsValid || user.status === "SUSPENDED") {
+      throw new UnauthorizedException("Email or password is incorrect.");
+    }
+    if (adminOnly && user.role !== "ADMIN") throw new UnauthorizedException("Email or password is incorrect.");
     const token = await this.createSession(user.id);
     return { user: { id: user.id, email: user.email, displayName: user.displayName }, token };
+  }
+
+  async resolveOAuthUser(input: {
+    provider: "GOOGLE" | "FACEBOOK" | "APPLE";
+    providerUserId: string;
+    email?: string;
+    emailVerified: boolean;
+    displayName?: string;
+  }) {
+    const identity = await this.prisma.oAuthIdentity.findUnique({
+      where: { provider_providerUserId: { provider: input.provider, providerUserId: input.providerUserId } },
+      include: { user: { select: { id: true, email: true, displayName: true, status: true } } },
+    });
+    if (identity) {
+      if (identity.user.status === "SUSPENDED") throw new UnauthorizedException("Unable to complete social sign-in. Try your existing sign-in method.");
+      return identity.user;
+    }
+
+    const email = input.email?.trim().toLowerCase() ?? "";
+    const displayName = input.displayName?.trim().slice(0, 80) || email.split("@")[0] || "Flatmate member";
+    if (!input.emailVerified || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+      throw new UnauthorizedException("Unable to complete social sign-in. Try another sign-in method.");
+    }
+
+    if (await this.prisma.user.findUnique({ where: { email }, select: { id: true } })) {
+      throw new UnauthorizedException("Unable to complete social sign-in. Try your existing sign-in method.");
+    }
+
+    try {
+      return await this.prisma.user.create({
+        data: {
+          email,
+          displayName,
+          status: "ACTIVE",
+          profile: { create: {} },
+          oauthIdentities: { create: { provider: input.provider, providerUserId: input.providerUserId } },
+        },
+        select: { id: true, email: true, displayName: true, status: true },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+        const racedIdentity = await this.prisma.oAuthIdentity.findUnique({
+          where: { provider_providerUserId: { provider: input.provider, providerUserId: input.providerUserId } },
+          include: { user: { select: { id: true, email: true, displayName: true, status: true } } },
+        });
+        if (racedIdentity && racedIdentity.user.status !== "SUSPENDED") return racedIdentity.user;
+        throw new UnauthorizedException("Unable to complete social sign-in. Try your existing sign-in method.");
+      }
+      throw error;
+    }
   }
 
   async createSession(userId: string) {

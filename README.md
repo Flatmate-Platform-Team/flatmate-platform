@@ -43,6 +43,41 @@ The Expo app signs in through the same NestJS authentication service as the webs
 
 Set `EXPO_PUBLIC_API_URL` in the same terminal session each time you start Expo. It is a local development setting, not a committed project secret; each developer supplies their own reachable API address. Development uses plain HTTP on the local network. Use HTTPS for any deployed API.
 
+## Step 3: account sign-in and protection
+
+The existing password sign-in and registration are available on the website and in the Expo app. Google, Facebook, and Apple sign-in use authorization-code callbacks handled by the NestJS API; provider credentials stay on the API and are never put in web or mobile bundles. OAuth identities attach to a user only when that provider identity is already linked. The API does not silently link a new provider to an existing email/password account; use the existing sign-in method for that email.
+
+### Local OAuth configuration
+
+First create OAuth applications in the provider consoles for the website and mobile app, and register the exact API callback URLs below. Then configure these variables in the API's private local environment using values supplied by each provider. Do not commit the values or share them in source control.
+
+| Variable name | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_API_URL` | Optional website API origin when the API is not reachable at the website host on port `4000`. This is a public URL, not a secret. |
+| `OAUTH_API_BASE_URL` | Publicly reachable API origin; callback paths are `/auth/oauth/google/callback`, `/auth/oauth/facebook/callback`, and `/auth/oauth/apple/callback`. Use HTTPS except localhost HTTP for local browser development. A physical phone's OAuth provider callback needs an HTTPS-reachable API URL; the app itself can still use its own `EXPO_PUBLIC_API_URL` for API requests. |
+| `WEB_OAUTH_SUCCESS_URL` | Fixed website URL to receive a successful browser sign-in. |
+| `WEB_OAUTH_FAILURE_URL` | Fixed website URL to show a generic sign-in failure. |
+| `MOBILE_OAUTH_CALLBACK_URL` | Must be `flatmate://auth/callback` and match the Expo app scheme. |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Google OAuth web client credentials. Add the Google API callback URL as an authorized redirect URI. |
+| `FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET` | Facebook app credentials. Add the Facebook API callback URL to the app's valid OAuth redirect URIs. |
+| `APPLE_SERVICE_ID`, `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` | Apple Services ID, team/key identifiers, and private key for server-side client-secret signing. Configure Sign in with Apple and the API callback URL in the Apple developer console. |
+
+Google authorization uses PKCE S256 and server-side token verification. All providers use server-generated, one-time OAuth state and fixed configured callback URLs; Apple also uses a nonce. Facebook and Apple use their confidential server-side code exchange. Mobile sign-in returns a short-lived, one-time handoff bound to a verifier generated on the device; the session token is stored in Expo SecureStore. Never place client secrets, Apple private keys, or provider access tokens in `NEXT_PUBLIC_*`, Expo public variables, source code, or logs.
+
+After setting the provider variables in your own private API environment:
+
+1. Apply the additive OAuth migration to your own PostgreSQL database with `npm run db:migrate` from the project root. Generate the Prisma client with `npm run db:generate` if needed; stop the API first if it is running.
+2. Set `EXPO_PUBLIC_API_URL` to the API URL reachable from your browser/device. For physical phones, use your computer's current LAN address; for Android emulator use `http://10.0.2.2:4000`; for iOS simulator use `http://localhost:4000`.
+3. Start the API, website, and mobile app using the commands in the setup section. Mobile email/password sign-in works in Expo Go; provider sign-in uses the `flatmate://` callback and should be tested with an Expo development build that registers the scheme.
+
+### Authentication limits and proxy configuration
+
+The API returns HTTP 429 with a retry message when an authentication limit is exceeded. Current per-process fixed-window limits are 60 requests per IP and 12 per normalized account identifier for password sign-in (shared by web, mobile, and admin); 20 per IP and 6 per identifier per hour for registration; 24 OAuth starts per IP and 80 callbacks per IP per 15 minutes; 20 OAuth completions per account and 100 per IP per 15 minutes; and 120 logout requests per IP per 15 minutes. Limits use hashed IP/account keys, do not permanently lock accounts, and reset after their window. They reduce automated abuse but cannot stop every bot. They are process-local and are not a distributed limiter for multi-instance production deployments.
+
+Forwarded IP headers are ignored by default. `TRUST_PROXY_HOPS` defaults to `0` and accepts only `0` through `5`; configure it only to the exact number of trusted reverse-proxy hops, and prevent clients from bypassing that proxy. Incorrect proxy trust can let clients spoof their IP and evade IP limits. No CAPTCHA or paid anti-abuse service is required; one may be evaluated later as an optional addition.
+
+Password recovery and email verification are not configured in this project; no recovery endpoint is exposed until a delivery and verification flow is designed.
+
 ## Build the website
 Run `npm run build:web` from the project root. This creates a production build locally; it does not deploy the app.
 

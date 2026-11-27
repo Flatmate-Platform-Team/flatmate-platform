@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import SocialAuthButtons from "../../components/social-auth-buttons";
 
 function getApiUrl() {
   return process.env.NEXT_PUBLIC_API_URL ?? `${window.location.protocol}//${window.location.hostname}:4000`;
@@ -41,6 +42,8 @@ export default function Login() {
         <p className="eyebrow"><span className="eyebrow-dot" /> GOOD TO HAVE YOU BACK</p>
         <h1>Welcome back.</h1>
         <p className="copy">Sign in to pick up where your next chapter begins.</p>
+        <SocialAuthButtons />
+        <div className="auth-divider"><span>or use email</span></div>
         <form className="auth-form" onSubmit={submit}>
           <label>Email address<input name="email" type="email" autoComplete="email" required /></label>
           <label>Password<input name="password" type="password" autoComplete="current-password" required /></label>
