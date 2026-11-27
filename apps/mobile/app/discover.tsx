@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { AppFrame, palette } from "../components/app-ui";
 import { getSignedInUser, MobileApiError, mobileApiRequest, signOut } from "../lib/auth";
 
 type Flatmate = {
@@ -45,6 +46,7 @@ export default function Discover() {
   const [signingOut, setSigningOut] = useState(false);
   const [error, setError] = useState("");
   const [matchNotice, setMatchNotice] = useState("");
+  const [showProfile, setShowProfile] = useState(false);
   const translateX = useRef(new Animated.Value(0)).current;
   const person = people[0] ?? null;
 
@@ -140,23 +142,24 @@ export default function Discover() {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator color="#c6e3ce" size="large" />
+        <ActivityIndicator color="#526DFF" size="large" />
         <Text style={styles.muted}>Finding flatmates…</Text>
       </View>
     );
   }
 
   return (
+    <AppFrame active="Discover">
     <View style={styles.page}>
       <View pointerEvents="none" style={styles.glowTop} />
       <View pointerEvents="none" style={styles.glowBottom} />
       <View style={styles.header}>
         <View>
-          <Text style={styles.brand}>avenli<Text style={styles.brandDot}>.</Text></Text>
+          <Text style={styles.brand}>Flatmate discovery</Text>
           <Text style={styles.eyebrow}>MEET YOUR FUTURE FLATMATES</Text>
         </View>
         <Pressable accessibilityRole="button" accessibilityLabel="Sign out" disabled={signingOut} onPress={handleSignOut} style={styles.signOutButton}>
-          {signingOut ? <ActivityIndicator color="#c6e3ce" /> : <Text style={styles.signOutText}>Sign out</Text>}
+          {signingOut ? <ActivityIndicator color="#526DFF" /> : <Text style={styles.signOutText}>Sign out</Text>}
         </Pressable>
       </View>
 
@@ -195,12 +198,14 @@ export default function Discover() {
           </Animated.View>
           <View style={styles.actions}>
             <Pressable accessibilityRole="button" accessibilityLabel={`Pass on ${person.displayName}`} accessibilityHint="Removes this profile from your discovery deck" disabled={working} onPress={passCurrent} style={({ pressed }) => [styles.passButton, pressed && !working ? styles.pressed : null, working ? styles.disabled : null]}>
-              {working ? <ActivityIndicator color="#c6e3ce" /> : <Text style={styles.passText}>Pass</Text>}
+              {working ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.passText}>Pass</Text>}
             </Pressable>
             <Pressable accessibilityRole="button" accessibilityLabel={`Like ${person.displayName}`} accessibilityHint="Likes this profile and moves to the next one" disabled={working} onPress={likeCurrent} style={({ pressed }) => [styles.likeButton, pressed && !working ? styles.pressed : null, working ? styles.disabled : null]}>
-              {working ? <ActivityIndicator color="#14251c" /> : <Text style={styles.likeText}>Like  ♥</Text>}
+              {working ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.likeText}>Like  ♥</Text>}
             </Pressable>
           </View>
+          <Pressable accessibilityRole="button" accessibilityState={{ expanded: showProfile }} onPress={() => setShowProfile((value) => !value)} style={styles.viewProfile}><Text style={styles.viewProfileText}>{showProfile ? "Hide profile details" : "View profile details  ↓"}</Text></Pressable>
+          {showProfile ? <View style={styles.detailsCard}><Text style={styles.detailsTitle}>Profile details</Text><Text style={styles.detailsText}>{person.profile?.bio || "Bio not added yet."}</Text><Text style={styles.detailsMeta}>Preferred location · {person.profile?.city || "Not added"}</Text><Text style={styles.detailsMeta}>Monthly budget · {budgetLabel(person)}</Text><Text style={styles.detailsMeta}>Age and profession · Not shared</Text><Text style={styles.detailsMeta}>Lifestyle preferences · {person.profile?.preferences ? "See profile answers" : "Not added"}</Text></View> : null}
           <Text style={styles.remaining}>{people.length} {people.length === 1 ? "profile" : "profiles"} remaining</Text>
         </>
       ) : !error ? (
@@ -214,47 +219,54 @@ export default function Discover() {
         </View>
       ) : null}
     </View>
+    </AppFrame>
   );
 }
 
 const styles = StyleSheet.create({
-  page: { flex: 1, paddingHorizontal: 24, paddingTop: 58, paddingBottom: 24, backgroundColor: "#080d0b" },
-  glowTop: { position: "absolute", top: -150, right: -120, width: 340, height: 340, borderRadius: 170, backgroundColor: "rgba(75,145,103,0.12)" },
-  glowBottom: { position: "absolute", bottom: 70, left: -190, width: 320, height: 320, borderRadius: 160, backgroundColor: "rgba(177,129,88,0.07)" },
-  centered: { flex: 1, alignItems: "center", justifyContent: "center", gap: 14, backgroundColor: "#080d0b" },
-  muted: { color: "#aab5ad", fontSize: 15 },
+  page: { flexGrow: 1, paddingHorizontal: 2, paddingTop: 12, paddingBottom: 18 },
+  glowTop: { position: "absolute", top: -150, right: -120, width: 340, height: 340, borderRadius: 170, backgroundColor: "rgba(48,79,254,0.14)" },
+  glowBottom: { position: "absolute", bottom: 70, left: -190, width: 320, height: 320, borderRadius: 160, backgroundColor: "rgba(232,255,0,0.035)" },
+  centered: { flex: 1, alignItems: "center", justifyContent: "center", gap: 14, backgroundColor: "#080808" },
+  muted: { color: "#A1A1AA", fontSize: 15 },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  brand: { color: "#f3f2eb", fontSize: 27, fontWeight: "900", letterSpacing: -1 },
-  brandDot: { color: "#a9d9bd" },
-  eyebrow: { marginTop: 4, color: "#c1d9c8", fontSize: 10, fontWeight: "800", letterSpacing: 1.1 },
-  signOutButton: { minHeight: 44, justifyContent: "center", paddingHorizontal: 13, borderRadius: 14, borderWidth: 1, borderColor: "rgba(236,246,239,0.18)", backgroundColor: "rgba(255,255,255,0.055)" },
-  signOutText: { color: "#c6e3ce", fontSize: 13, fontWeight: "700" },
-  deckCaption: { marginTop: 26, marginBottom: 14, color: "#aab5ad", fontSize: 14 },
-  profileCard: { flex: 1, minHeight: 330, maxHeight: 520, alignItems: "center", justifyContent: "center", paddingHorizontal: 25, paddingVertical: 25, borderRadius: 26, borderWidth: 1, borderColor: "rgba(226,245,232,0.2)", backgroundColor: "rgba(233,245,237,0.075)", elevation: 8, shadowColor: "#6fae86", shadowOpacity: 0.16, shadowRadius: 24, shadowOffset: { width: 0, height: 12 } },
-  avatar: { width: 76, height: 76, alignItems: "center", justifyContent: "center", borderRadius: 38, borderWidth: 1, borderColor: "rgba(198,227,206,0.3)", backgroundColor: "rgba(198,227,206,0.14)" },
-  avatarText: { color: "#c6e3ce", fontSize: 31, fontWeight: "800" },
-  name: { marginTop: 19, color: "#f3f2eb", fontSize: 27, fontWeight: "900", textAlign: "center" },
-  location: { marginTop: 6, color: "#b5c1b8", fontSize: 15 },
-  budgetPill: { marginTop: 13, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 18, borderWidth: 1, borderColor: "rgba(198,227,206,0.18)", backgroundColor: "rgba(198,227,206,0.1)" },
-  budget: { color: "#c6e3ce", fontSize: 13, fontWeight: "700" },
-  divider: { width: 42, height: 1, marginTop: 19, marginBottom: 16, backgroundColor: "rgba(234,244,236,0.2)" },
-  bio: { color: "#d1d8d2", fontSize: 15, lineHeight: 23, textAlign: "center" },
-  swipeHint: { marginTop: 19, color: "#91a198", fontSize: 11 },
+  brand: { color: palette.white, fontSize: 21, fontWeight: "900", letterSpacing: -0.5 },
+  brandDot: { color: palette.blueLight },
+  eyebrow: { marginTop: 4, color: "#8798FF", fontSize: 10, fontWeight: "800", letterSpacing: 1.1 },
+  signOutButton: { minHeight: 40, justifyContent: "center", paddingHorizontal: 13, borderRadius: 14, borderWidth: 1, borderColor: "rgba(255,255,255,0.16)", backgroundColor: "rgba(255,255,255,0.055)" },
+  signOutText: { color: "#E8FF00", fontSize: 12, fontWeight: "700" },
+  deckCaption: { marginTop: 18, marginBottom: 13, color: "#A1A1AA", fontSize: 13 },
+  profileCard: { minHeight: 330, maxHeight: 520, alignItems: "center", justifyContent: "center", paddingHorizontal: 25, paddingVertical: 25, borderRadius: 26, borderWidth: 1, borderColor: "rgba(255,255,255,0.17)", backgroundColor: "#151515", elevation: 9, shadowColor: "#304FFE", shadowOpacity: 0.17, shadowRadius: 24, shadowOffset: { width: 0, height: 12 } },
+  avatar: { width: 76, height: 76, alignItems: "center", justifyContent: "center", borderRadius: 38, borderWidth: 1, borderColor: "rgba(82,109,255,0.62)", backgroundColor: "rgba(48,79,254,0.2)" },
+  avatarText: { color: "#FFFFFF", fontSize: 31, fontWeight: "800" },
+  name: { marginTop: 19, color: "#FFFFFF", fontSize: 27, fontWeight: "900", textAlign: "center" },
+  location: { marginTop: 6, color: "#A1A1AA", fontSize: 15 },
+  budgetPill: { marginTop: 13, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 18, borderWidth: 1, borderColor: "rgba(232,255,0,0.25)", backgroundColor: "rgba(232,255,0,0.08)" },
+  budget: { color: "#E8FF00", fontSize: 13, fontWeight: "700" },
+  divider: { width: 42, height: 1, marginTop: 19, marginBottom: 16, backgroundColor: "rgba(255,255,255,0.16)" },
+  bio: { color: "#D4D4D8", fontSize: 15, lineHeight: 23, textAlign: "center" },
+  swipeHint: { marginTop: 19, color: "#A1A1AA", fontSize: 11 },
   actions: { flexDirection: "row", gap: 14, marginTop: 19 },
-  passButton: { flex: 1, minHeight: 58, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "rgba(236,246,239,0.2)", borderRadius: 17, backgroundColor: "rgba(255,255,255,0.055)" },
-  likeButton: { flex: 1, minHeight: 58, alignItems: "center", justifyContent: "center", borderRadius: 17, backgroundColor: "#c6e3ce", shadowColor: "#76bd93", shadowOpacity: 0.2, shadowRadius: 16, shadowOffset: { width: 0, height: 6 }, elevation: 5 },
-  passText: { color: "#e0e8e1", fontSize: 16, fontWeight: "800" },
-  likeText: { color: "#14251c", fontSize: 16, fontWeight: "800" },
+  passButton: { flex: 1, minHeight: 58, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.2)", borderRadius: 17, backgroundColor: "rgba(255,255,255,0.055)" },
+  likeButton: { flex: 1, minHeight: 58, alignItems: "center", justifyContent: "center", borderRadius: 17, backgroundColor: "#304FFE", shadowColor: "#304FFE", shadowOpacity: 0.3, shadowRadius: 16, shadowOffset: { width: 0, height: 6 }, elevation: 5 },
+  passText: { color: "#FFFFFF", fontSize: 16, fontWeight: "800" },
+  likeText: { color: "#FFFFFF", fontSize: 16, fontWeight: "800" },
   pressed: { opacity: 0.84, transform: [{ scale: 0.98 }] },
   disabled: { opacity: 0.65 },
-  remaining: { marginTop: 13, color: "#91a198", fontSize: 12, textAlign: "center" },
-  errorBox: { marginTop: 20, padding: 15, borderRadius: 16, borderWidth: 1, borderColor: "rgba(255,180,168,0.2)", backgroundColor: "rgba(255,180,168,0.08)" },
-  errorText: { color: "#ffb4a8", fontSize: 13, lineHeight: 19 },
-  retryButton: { alignSelf: "center", marginTop: 14, paddingHorizontal: 19, paddingVertical: 12, borderRadius: 14, borderWidth: 1, borderColor: "rgba(198,227,206,0.2)", backgroundColor: "rgba(198,227,206,0.1)" },
-  retryText: { color: "#c6e3ce", fontSize: 14, fontWeight: "800" },
-  matchNotice: { marginTop: 16, padding: 13, borderRadius: 15, borderWidth: 1, borderColor: "rgba(185,229,198,0.2)", backgroundColor: "rgba(185,229,198,0.09)", color: "#b9e5c6", fontSize: 14, fontWeight: "700", lineHeight: 20 },
+  remaining: { marginTop: 13, color: "#A1A1AA", fontSize: 12, textAlign: "center" },
+  errorBox: { marginTop: 16, padding: 15, borderRadius: 16, borderWidth: 1, borderColor: "rgba(255,158,150,0.27)", backgroundColor: "rgba(255,90,80,0.08)" },
+  errorText: { color: "#FF9E96", fontSize: 13, lineHeight: 19 },
+  retryButton: { alignSelf: "center", marginTop: 14, paddingHorizontal: 19, paddingVertical: 12, borderRadius: 14, borderWidth: 1, borderColor: "rgba(82,109,255,0.3)", backgroundColor: "rgba(48,79,254,0.15)" },
+  retryText: { color: "#8798FF", fontSize: 14, fontWeight: "800" },
+  matchNotice: { marginTop: 16, padding: 13, borderRadius: 15, borderWidth: 1, borderColor: "rgba(232,255,0,0.22)", backgroundColor: "rgba(232,255,0,0.07)", color: "#E8FF00", fontSize: 14, fontWeight: "700", lineHeight: 20 },
   emptyState: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 16 },
-  emptyIcon: { color: "#c6e3ce", fontSize: 54 },
-  emptyTitle: { marginTop: 13, color: "#f3f2eb", fontSize: 22, fontWeight: "900", textAlign: "center" },
-  emptyCopy: { marginTop: 9, color: "#aab5ad", fontSize: 14, lineHeight: 21, textAlign: "center" },
+  emptyIcon: { color: "#526DFF", fontSize: 54 },
+  emptyTitle: { marginTop: 13, color: "#FFFFFF", fontSize: 22, fontWeight: "900", textAlign: "center" },
+  emptyCopy: { marginTop: 9, color: "#A1A1AA", fontSize: 14, lineHeight: 21, textAlign: "center" },
+  viewProfile: { alignItems: "center", padding: 11 },
+  viewProfileText: { color: "#A1A1AA", fontSize: 11, fontWeight: "800" },
+  detailsCard: { gap: 8, marginTop: 6, padding: 15, borderWidth: 1, borderColor: palette.line, borderRadius: 17, backgroundColor: palette.card },
+  detailsTitle: { color: palette.white, fontSize: 13, fontWeight: "900" },
+  detailsText: { color: "#D4D4D8", fontSize: 12, lineHeight: 18 },
+  detailsMeta: { color: palette.muted, fontSize: 10 },
 });

@@ -1380,3 +1380,113 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* Shared black, cobalt, and neon palette from the mobile product direction. */
+:root {
+  color-scheme: dark;
+  --ink: #ffffff;
+  --muted: #a1a1aa;
+  --forest: #8798ff;
+  --forest-deep: #ffffff;
+  --sage: rgba(48, 79, 254, .17);
+  --sage-dark: rgba(48, 79, 254, .28);
+  --paper: #080808;
+  --white: #151515;
+  --terracotta: #e8ff00;
+  --gold: #e8ff00;
+  --line: rgba(255, 255, 255, .1);
+  --shadow: 0 24px 80px rgba(0, 0, 0, .48);
+  --brand-blue: #304ffe;
+  --accent-blue: #8798ff;
+  --neon: #e8ff00;
+}
+
+html, body { background-color: #080808; color: #fff; }
+body {
+  background:
+    radial-gradient(ellipse at 86% 8%, rgba(48, 79, 254, .2), transparent 34rem),
+    radial-gradient(ellipse at 8% 46%, rgba(82, 109, 255, .08), transparent 32rem),
+    linear-gradient(155deg, #080808 0%, #0b0b0d 55%, #080808 100%);
+}
+body::before {
+  background: radial-gradient(ellipse at 25% 15%, rgba(82, 109, 255, .09), transparent 31%), radial-gradient(ellipse at 78% 68%, rgba(232, 255, 0, .035), transparent 26%);
+}
+.logo span, .eyebrow, .listing-location, .home-location, .person-city, .admin-label { color: var(--accent-blue); }
+.links a:hover, .login-link:hover, .text-link:hover { color: var(--neon); }
+.hero h1, .hero h2, .section-heading h2, .steps-heading h2, .closing-card h2, .benefit-card h3, .home-card h3, .listing-card h2, .admin-profile-head h2, .swipe-person-heading h2 { color: #fff; }
+.hero-description, .section-heading > p, .benefit-card p, .footer p, .footer > span, .home-description, .home-owner, .person-bio, .match-banner p, .listing-state p, .step-card p, .steps-footer { color: #a1a1aa; }
+.nav, .footer { border-color: rgba(255,255,255,.1); }
+.btn {
+  border: 1px solid rgba(120, 143, 255, .6);
+  background: linear-gradient(135deg, #526dff, #304ffe);
+  box-shadow: 0 10px 32px rgba(48,79,254,.3), inset 0 1px rgba(255,255,255,.22);
+  color: #fff;
+}
+.btn:hover { border-color: #8798ff; background: #526dff; box-shadow: 0 14px 38px rgba(48,79,254,.42); }
+.btn-light { border-color: rgba(232,255,0,.34); background: #e8ff00; color: #080808; }
+.btn-light:hover { border-color: #f0ff69; background: #f0ff69; color: #080808; }
+.hero-showcase, .home-card, .person-card, .admin-profile-card, .auth-card,
+.search-panel, .people-search, .listing-card, .benefit-card, .closing-card,
+.match-banner, .listing-state, .swipe-card, .auth-form, .form-panel,
+.profile-panel, .listing-form, .admin-count, .admin-status {
+  border-color: rgba(255,255,255,.11);
+  background: linear-gradient(145deg, rgba(25,25,27,.97), rgba(18,18,20,.98));
+  box-shadow: 0 20px 65px rgba(0,0,0,.42), inset 0 1px rgba(255,255,255,.055);
+  backdrop-filter: blur(22px) saturate(125%);
+  -webkit-backdrop-filter: blur(22px) saturate(125%);
+}
+.hero-showcase { background: radial-gradient(ellipse at 63% 5%, rgba(82,109,255,.36), transparent 44%), linear-gradient(150deg,#161b37 0%,#111114 74%,#171717 100%); }
+.home-illustration { background: radial-gradient(circle at 75% 12%, rgba(82,109,255,.76), transparent 23%), linear-gradient(155deg,#161b37 0%,#1a2459 55%,#101116 100%); }
+.illustration-window { border-color: rgba(255,255,255,.72); background: rgba(255,255,255,.28); }
+.illustration-window span, .illustration-window span:nth-child(2), .illustration-window span:nth-child(3) { background: linear-gradient(145deg,rgba(255,255,255,.62),rgba(82,109,255,.72)); }
+.listing-card { background: rgba(15,15,18,.94); }
+.listing-card h2, .listing-price strong, .benefit-card h3, .section-heading h2, .steps-heading h2 { color: #fff; }
+.listing-price strong, .home-card-footer strong { color: var(--neon); }
+.benefit-card:hover, .person-card:hover, .admin-profile-card:hover, .home-card:hover { border-color: rgba(82,109,255,.5); box-shadow: 0 28px 70px rgba(0,0,0,.52), 0 0 30px rgba(48,79,254,.1); }
+.benefit-symbol, .note-icon, .listing-arrow, .person-avatar, .swipe-avatar { background: rgba(82,109,255,.19); color: #cbd2ff; }
+.steps-section { background: linear-gradient(135deg,rgba(19,23,48,.96),rgba(8,8,8,.98)); }
+.closing-card { background: linear-gradient(115deg,rgba(38,55,144,.86),rgba(17,18,26,.96)); }
+.closing-card h2, .closing-card .eyebrow-light { color: #fff; }
+.closing-card p, .step-card p, .steps-footer { color: #d4d4d8; }
+input, textarea, select {
+  border-color: rgba(255,255,255,.15) !important;
+  background: #101011 !important;
+  color: #fff !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.04);
+}
+input::placeholder, textarea::placeholder { color: #a1a1aa; opacity: 1; }
+input:focus, textarea:focus, select:focus { outline: 2px solid rgba(82,109,255,.75); outline-offset: 2px; }
+label, .auth-switch, .form-label, .results-heading, .home-meta, .person-main h3 { color: #fff; }
+.auth-shell { background: transparent; }
+.auth-card { border-radius: 28px; }
+.social-auth-button, .oauth-button, .like-button, .test-account-remove {
+  border-color: rgba(255,255,255,.16);
+  background: #202023;
+  color: #fff;
+  backdrop-filter: blur(16px);
+}
+.match-banner { color: #fff; }
+.match-banner strong, .match-banner > span, .match-date { color: var(--neon); }
+.admin-label, .admin-status, .admin-count { color: var(--neon); }
+.admin-count, .admin-status { background: rgba(232,255,0,.09); }
+.match-banner p, .home-owner, .person-main .person-city { color: #a1a1aa; }
+.listing-state { color: #fff; }
+.listing-state p, .listing-state h3, .empty-icon { color: #fff; }
+.listing-error, .form-message, .listing-error p { color: #ff9e96; }
+.listing-error { border-color: rgba(255,158,150,.45); background: rgba(255,90,80,.08); }
+.home-meta span { background: rgba(82,109,255,.19); color: #e4e7ff; }
+.admin-profile-head > div > p:last-child, .admin-bio { color: #d4d4d8; }
+.test-account-badge { color: var(--neon); }
+.test-account-remove { border-color: rgba(255,158,150,.35); background: rgba(255,90,80,.08); color: #ffaaa2; }
+.test-account-remove:hover:not(:disabled) { border-color: #ff9e96; background: rgba(255,90,80,.16); }
+.swipe-card { background: #151515; }
+.swipe-card-visual { background: radial-gradient(circle at 68% 15%,rgba(82,109,255,.65),transparent 25%),linear-gradient(155deg,#252b54,#17171d 70%,#101011); }
+.swipe-card-info { color: #fff; }
+.swipe-card-info p, .swipe-person-heading span, .swipe-hint { color: #a1a1aa; }
+.swipe-controls button { border-color: rgba(255,255,255,.2) !important; background: #202023; }
+.swipe-controls .swipe-pass { color: #ffaaa2; }
+.swipe-controls .swipe-like { color: var(--neon); }
+.listing-state { border-color: rgba(255,255,255,.16); background: #151515; }
+.listing-state .btn { color: #fff; }
+a:focus-visible, button:focus-visible { outline-color: var(--neon); }
+::selection { background: rgba(82,109,255,.48); color: #fff; }

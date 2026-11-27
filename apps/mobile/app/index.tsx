@@ -39,7 +39,7 @@ export default function SignIn() {
 
     getSignedInUser()
       .then((user: MobileUser | null) => {
-        if (active && user) router.replace("/discover");
+        if (active && user) router.replace("/home");
       })
       .catch((reason: unknown) => {
         if (active) setError(reason instanceof Error ? reason.message : "Could not check your saved sign-in.");
@@ -70,7 +70,7 @@ export default function SignIn() {
         setPassword("");
       } else {
         await signIn(email, password);
-        router.replace("/discover");
+        router.replace("/home");
       }
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Could not sign in. Please try again.");
@@ -82,7 +82,7 @@ export default function SignIn() {
   if (checkingSession) {
     return (
       <View style={styles.loadingPage}>
-        <ActivityIndicator color="#a9d9bd" />
+        <ActivityIndicator color="#526dff" />
         <Text style={styles.loadingText}>Checking your sign-in…</Text>
       </View>
     );
@@ -104,7 +104,7 @@ export default function SignIn() {
         </Text>
 
         <View style={styles.socialSection}>
-          <OAuthButtons onSignedIn={() => router.replace("/discover")} />
+          <OAuthButtons onSignedIn={() => router.replace("/home")} />
           <View style={styles.divider}><View style={styles.dividerLine} /><Text style={styles.dividerText}>or use email</Text><View style={styles.dividerLine} /></View>
         </View>
 
@@ -171,7 +171,7 @@ export default function SignIn() {
             onPress={submit}
             style={({ pressed }) => [styles.button, pressed && !busy ? styles.buttonPressed : null, busy ? styles.buttonBusy : null]}
           >
-            {busy ? <ActivityIndicator color="#14251c" /> : <Text style={styles.buttonText}>{mode === "sign-in" ? "Sign in" : "Create account"}</Text>}
+            {busy ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.buttonText}>{mode === "sign-in" ? "Sign in" : "Create account"}</Text>}
           </Pressable>
         </View>
 
@@ -190,31 +190,31 @@ export default function SignIn() {
 }
 
 const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: "#080d0b" },
-  glowTop: { position: "absolute", top: -135, right: -100, width: 300, height: 300, borderRadius: 150, backgroundColor: "rgba(75,145,103,0.13)" },
-  glowBottom: { position: "absolute", bottom: 70, left: -180, width: 300, height: 300, borderRadius: 150, backgroundColor: "rgba(177,129,88,0.08)" },
+  page: { flex: 1, backgroundColor: "#080808" },
+  glowTop: { position: "absolute", top: -135, right: -100, width: 300, height: 300, borderRadius: 150, backgroundColor: "rgba(48,79,254,0.17)" },
+  glowBottom: { position: "absolute", bottom: 70, left: -180, width: 300, height: 300, borderRadius: 150, backgroundColor: "rgba(232,255,0,0.05)" },
   content: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 28, paddingTop: 58, paddingBottom: 42 },
-  loadingPage: { flex: 1, alignItems: "center", justifyContent: "center", gap: 12, backgroundColor: "#080d0b" },
-  loadingText: { color: "#aab5ad", fontSize: 14 },
-  brand: { marginBottom: 42, color: "#f3f2eb", fontSize: 28, fontWeight: "900", letterSpacing: -1 },
-  brandDot: { color: "#a9d9bd" },
-  eyebrow: { color: "#c1d9c8", fontSize: 11, fontWeight: "800", letterSpacing: 1.5 },
-  title: { marginTop: 14, color: "#f3f2eb", fontSize: 47, fontWeight: "900", lineHeight: 52, letterSpacing: -2 },
-  description: { marginTop: 12, color: "#aab5ad", fontSize: 15, lineHeight: 23 },
-  form: { marginTop: 22, padding: 18, borderWidth: 1, borderColor: "rgba(236,246,239,0.14)", borderRadius: 22, backgroundColor: "rgba(255,255,255,0.045)", shadowColor: "#6fae86", shadowOpacity: 0.1, shadowRadius: 22, shadowOffset: { width: 0, height: 10 }, elevation: 3 },
-  socialSection: { marginTop: 27, padding: 16, borderWidth: 1, borderColor: "rgba(236,246,239,0.12)", borderRadius: 22, backgroundColor: "rgba(255,255,255,0.035)" },
+  loadingPage: { flex: 1, alignItems: "center", justifyContent: "center", gap: 12, backgroundColor: "#080808" },
+  loadingText: { color: "#A1A1AA", fontSize: 14 },
+  brand: { marginBottom: 42, color: "#FFFFFF", fontSize: 28, fontWeight: "900", letterSpacing: -1 },
+  brandDot: { color: "#526DFF" },
+  eyebrow: { color: "#8798FF", fontSize: 11, fontWeight: "800", letterSpacing: 1.5 },
+  title: { marginTop: 14, color: "#FFFFFF", fontSize: 47, fontWeight: "900", lineHeight: 52, letterSpacing: -2 },
+  description: { marginTop: 12, color: "#A1A1AA", fontSize: 15, lineHeight: 23 },
+  form: { marginTop: 22, padding: 18, borderWidth: 1, borderColor: "rgba(255,255,255,0.12)", borderRadius: 22, backgroundColor: "rgba(255,255,255,0.045)", shadowColor: "#304FFE", shadowOpacity: 0.1, shadowRadius: 22, shadowOffset: { width: 0, height: 10 }, elevation: 3 },
+  socialSection: { marginTop: 27, padding: 16, borderWidth: 1, borderColor: "rgba(255,255,255,0.1)", borderRadius: 22, backgroundColor: "rgba(255,255,255,0.035)" },
   divider: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 19 },
-  dividerLine: { flex: 1, height: 1, backgroundColor: "rgba(234,244,236,0.15)" },
-  dividerText: { color: "#aab5ad", fontSize: 11 },
-  label: { marginBottom: 8, color: "#e6ebe6", fontSize: 13, fontWeight: "700" },
-  input: { minHeight: 52, marginBottom: 19, paddingHorizontal: 15, borderWidth: 1, borderColor: "rgba(236,246,239,0.16)", borderRadius: 15, color: "#f3f2eb", fontSize: 15, backgroundColor: "rgba(255,255,255,0.055)" },
-  error: { marginBottom: 14, color: "#ffb4a8", fontSize: 13, lineHeight: 19 },
-  notice: { marginBottom: 14, color: "#b9e5c6", fontSize: 13, lineHeight: 19 },
-  button: { minHeight: 54, alignItems: "center", justifyContent: "center", borderRadius: 16, backgroundColor: "#c6e3ce", shadowColor: "#76bd93", shadowOpacity: 0.22, shadowRadius: 20, shadowOffset: { width: 0, height: 8 }, elevation: 6 },
+  dividerLine: { flex: 1, height: 1, backgroundColor: "rgba(255,255,255,0.14)" },
+  dividerText: { color: "#A1A1AA", fontSize: 11 },
+  label: { marginBottom: 8, color: "#F4F4F5", fontSize: 13, fontWeight: "700" },
+  input: { minHeight: 52, marginBottom: 19, paddingHorizontal: 15, borderWidth: 1, borderColor: "rgba(255,255,255,0.16)", borderRadius: 15, color: "#FFFFFF", fontSize: 15, backgroundColor: "#101011" },
+  error: { marginBottom: 14, color: "#FF9E96", fontSize: 13, lineHeight: 19 },
+  notice: { marginBottom: 14, color: "#8FE3B0", fontSize: 13, lineHeight: 19 },
+  button: { minHeight: 54, alignItems: "center", justifyContent: "center", borderRadius: 16, backgroundColor: "#304FFE", shadowColor: "#304FFE", shadowOpacity: 0.32, shadowRadius: 20, shadowOffset: { width: 0, height: 8 }, elevation: 6 },
   buttonPressed: { opacity: 0.86, transform: [{ scale: 0.985 }] },
   buttonBusy: { opacity: 0.7 },
-  buttonText: { color: "#14251c", fontSize: 15, fontWeight: "800" },
-  footer: { marginTop: 24, color: "#87958c", fontSize: 12, textAlign: "center" },
+  buttonText: { color: "#FFFFFF", fontSize: 15, fontWeight: "800" },
+  footer: { marginTop: 24, color: "#A1A1AA", fontSize: 12, textAlign: "center" },
   switchMode: { alignSelf: "center", marginTop: 18, paddingVertical: 8 },
-  switchModeText: { color: "#b8dfc3", fontSize: 13, fontWeight: "700" },
+  switchModeText: { color: "#E8FF00", fontSize: 13, fontWeight: "700" },
 });

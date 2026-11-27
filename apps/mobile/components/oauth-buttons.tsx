@@ -69,7 +69,7 @@ export default function OAuthButtons({ onSignedIn }: { onSignedIn: () => void })
           onPress={() => void start(provider.id)}
           style={({ pressed }) => [styles.button, pressed && !busyProvider ? styles.pressed : null, busyProvider ? styles.disabled : null]}
         >
-          {busyProvider === provider.id ? <ActivityIndicator color="#dfeee3" /> : <Text style={[styles.symbol, provider.id === "facebook" ? styles.facebook : null]}>{provider.symbol}</Text>}
+          {busyProvider === provider.id ? <ActivityIndicator color="#FFFFFF" /> : <Text style={[styles.symbol, provider.id === "facebook" ? styles.facebook : null]}>{provider.symbol}</Text>}
           <Text style={styles.label}>{busyProvider === provider.id ? "Opening secure sign-in…" : provider.label}</Text>
         </Pressable>
       ))}
@@ -80,11 +80,11 @@ export default function OAuthButtons({ onSignedIn }: { onSignedIn: () => void })
 
 const styles = StyleSheet.create({
   container: { gap: 9 },
-  button: { minHeight: 49, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 11, borderWidth: 1, borderColor: "rgba(236,246,239,0.17)", borderRadius: 15, backgroundColor: "rgba(255,255,255,0.055)" },
+  button: { minHeight: 49, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 11, borderWidth: 1, borderColor: "rgba(255,255,255,0.17)", borderRadius: 15, backgroundColor: "#151515" },
   symbol: { width: 20, color: "#4285f4", fontSize: 15, fontWeight: "900", textAlign: "center" },
   facebook: { color: "#1877f2", fontSize: 20 },
-  label: { color: "#e6ebe6", fontSize: 13, fontWeight: "700" },
-  pressed: { backgroundColor: "rgba(198,227,206,0.1)", borderColor: "rgba(198,227,206,0.42)" },
+  label: { color: "#F4F4F5", fontSize: 13, fontWeight: "700" },
+  pressed: { backgroundColor: "#202126", borderColor: "#526DFF" },
   disabled: { opacity: 0.65 },
-  error: { marginTop: 2, color: "#ffb4a8", fontSize: 12, lineHeight: 18 },
+  error: { marginTop: 2, color: "#FF9E96", fontSize: 12, lineHeight: 18 },
 });
